@@ -1,9 +1,14 @@
-#include <iostream>
+#pragma once
 
-class Vector
+class Test
 {
 private:
+	float _f;
+	float _f2;
 public:
-	Vector();
-	~Vector();
+	Test(/* args */);
+	Test(float f1, float f2);
+	~Test();
+	operator int() const;
+	int cast() const;
 };

@@ -4,7 +4,8 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address -std=c++98
 
-SRC = test.cpp
+SRC = test.cpp\
+	maintests.cpp
 	
 all : $(NAME)
 

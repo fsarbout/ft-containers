@@ -115,7 +115,6 @@ int main(int argc, char **argv)
 	return (0);
 }
 
-// todo: vector
-// todo: map
-// todo: stack <uses vector>
-// todo:
+// TODO: vector
+// TODO: map
+// TODO: stack <uses vector>

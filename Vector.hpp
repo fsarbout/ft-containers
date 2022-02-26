@@ -1,14 +1,20 @@
-#pragma once
+// #pragma once
 
-class Test
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
+
+// #include "Helpers.hpp"
+#include <iostream>
+
+
+template <class T>
+class Vector
 {
 private:
-	float _f;
-	float _f2;
 public:
-	Test(/* args */);
-	Test(float f1, float f2);
-	~Test();
-	operator int() const;
-	int cast() const;
+	Vector();
+	Vector(int i);
+	~Vector();
 };
+
+#endif

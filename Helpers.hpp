@@ -6,8 +6,7 @@
 
 
 #define cout std::cout
-// #define vector std::vector 
 #define endl std::endl 
-// #define std::cout cout
+#define string std::string
 // #define std::cout cout
 

@@ -10,7 +10,7 @@ template <typename T>
 class Vector
 {
 private:
-	T* _data = nullptr;
+	T* _data;
 	size_t _size; // * number of elements
 	size_t _capacity; // * how much it can store without reallocating
 	void  reAlloc(size_t newCapacity)
@@ -33,14 +33,42 @@ public:
 	{
 		reAlloc(2);
 	}
-	Vector(int i)
-	{
 
-	}
 	~Vector()
 	{
 
 	}
+
+	// Vector & operator=(const Vector & other)
+	// {
+	// 	if (this != &other)
+	// 	{
+	// 		// ? necessity of delete[] ??
+	// 		delete[] _data;
+	// 		_data = new T[other._capacity];
+	// 		_size = other._size;
+	// 		_capacity = other._capacity;
+	// 		for (size_t i = 0; i < _size; i++)
+	// 			_data[i] = other._data[i];
+	// 	}
+	// 	return *this;
+	// }
+
+	// Vector(const Vector& other)
+	// {
+	// 	*this = other;
+	// }
+
+	size_t Size() const
+	{
+		return _size;
+	}
+
+	size_t Capacity() const
+	{
+		return _capacity;
+	}
+
 	void pushBack(const T& value)
 	{
 		if (_size >= _capacity)
@@ -48,7 +76,8 @@ public:
 		_data[_size] = value;
 		_size++;
 	}
-	const T& operator[](size_t index)
+
+	const T& operator[](size_t index) const
 	{
 		return _data[index];
 	}

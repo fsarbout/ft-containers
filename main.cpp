@@ -11,5 +11,20 @@ int main()
 {
 	Vector<string> vector;
 
-	vector.pushBack("fatima zahra");
+	for(size_t i = 0; i < 40; i++)
+	{
+
+		cout << "push back" << endl;
+		cout << "size: " << vector.Size() << endl;
+		cout << "capacity: " << vector.Capacity() << endl;
+		vector.pushBack("Hello");
+	}
+
+	for(size_t i = 0; i < vector.Capacity(); i++)
+	{
+		cout << "print" << endl;
+		cout << "size: " << vector.Size() << endl;
+		cout << "capacity: " << vector.Capacity() << endl;
+		// printVector(vector);
+	}
 }

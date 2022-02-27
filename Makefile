@@ -1,11 +1,10 @@
-NAME = test
+NAME = Vector
 
 CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address -std=c++98
 
-SRC = test.cpp\
-	maintests.cpp
+SRC = main.cpp\
 	
 all : $(NAME)
 

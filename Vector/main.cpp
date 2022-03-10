@@ -1,7 +1,7 @@
 #include "Vector.hpp"
 
 template<typename T>
-void printVector(const Vector<T> v)
+void printVector(const ft::vector <T> v)
 {
 	for (size_t i = 0; i < v.Size(); i++)
 		std::cout << v[i] << std::endl;
@@ -9,8 +9,8 @@ void printVector(const Vector<T> v)
 
 int main()
 {
-	Vector<std::string> vector;
-	Vector<std::string> vector2(vector);
+	ft::vector<std::string> vector;
+	ft::vector<std::string> vector2(vector);
 
 	for(size_t i = 0; i < 400; i++)
 		vector.pushBack("Hello");

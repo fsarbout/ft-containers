@@ -1,126 +1,129 @@
-// #pragma once
-
-#include <stack>
-
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
-
-#include "../Helpers.hpp"
-#include <memory>
 
 namespace ft
 {
 	template <typename T>
-	class vector
+	class Vector
 	{
-	private:
-		std::allocator<T> alloc;
-		T *_data;
-		size_t _size;	  // ! number of elements
-		size_t _capacity; // ! how much it can store without reallocating
-		//
-		void reAlloc(size_t newCapacity)
-		{
-			T *newBlock = new T[newCapacity];
-
-			if (newCapacity < _size)
-				_size = newCapacity;
-
-			for (size_t i = 0; i < _size; i++)
-				newBlock[i] = _data[i];
-
-			delete[] _data;
-			_data = newBlock;
-			_capacity = newCapacity;
-		}
 
 	public:
-		// TODO : constructor * 4
-		// TODO : destructor
-		// TODO : operator =
-		// ! ITERATORS
-		// TODO : ITERATOR: 1.begin() => return iterator to beginning
-		// TODO : ITERATOR: 2.end() => ret iterator to end
-		// TODO : ITERATOR: 3.rbegin() => ret reverse iterator to reverse beginning
-		// TODO : ITERATOR: 4.rend() => ret reverse iterator to reverse end
-		// TODO : ITERATOR: 5.cbegin() => ret const iterator to beginning
-		// TODO : ITERATOR: 6.cend() => ret const iterator to end
-		// TODO : ITERATOR: 7.crbegin() => ret const reverse iterator to reverse beginning
-		// TODO : ITERATOR: 8.crend() => ret const reverse iterator to reverse end
+		typedef value_type T;
+		typedef allocator_type std::allocator;
+		typedef reference T &;
+		typedef const_reference const T &;
+		typedef pointer T *;
+		typedef const_pointer const T *;
+		// typedef iterator const_iterator;
+		// typedef reverse_iterator ;
+		// typedef const_reverse_iterator ;
+		typedef difference_type ptrdiff_t;
+		typedef size_type size_t;
 
-		// TODO : void push_back(int data) - add element to the end of the vector
-		// TODO : void push(int data, int index) - add element to index position
-		// TODO : int get(int index) - return element at index position
-		// TODO : void pop() - remove element from the end of the vectorxo
-		// TODO : int size() - return number of elements (just filled elements)
-		// TODO : int capacity() - return total storage
-		// TODO :
-		// TODO :
-		// TODO :
-		// TODO :
-		// TODO :
+	private:
+		T *_arr;
+		size_type _size;
+		size_type _capacity;
+		allocator_type allocator
 
-		// ! default constructor
-		vector()
+	public:
+		Vector();
+		~Vector();
+		Vector &operator=(const Vector &obj)
 		{
-			std::cout << GREEN << "default constructor" << DEFAULT << std::endl;
-			_data = new T[2];
-			_capacity = 2;
-			_size = 0;
+			std::cout << GREEN << "OPERATOR =" << DEFAULT << std::endl;
+			this->_arr = obj._arr;
 		}
-		// ! fill constructor : constructs a container with n elements, each element is a copy of val
-		~vector()
-		{
-			std::cout << GREEN << "destructor" << DEFAULT << std::endl;
-			delete[] _data;
-		}
-
-		vector &operator=(const vector &other)
-		{
-			std::cout << GREEN << "assignment operator" << DEFAULT << std::endl;
-			if (this != &other)
-			{
-				// ? necessity of delete[] ??
-				// delete[] _data;
-				_data = new T[other._capacity];
-				_size = other._size;
-				_capacity = other._capacity;
-				for (size_t i = 0; i < _size; i++)
-					_data[i] = other._data[i];
-			}
-			return *this;
-		}
-
-		vector(const vector &other)
-		{
-			std::cout << GREEN << "copy constructor" << DEFAULT << std::endl;
-			*this = other;
-		}
-
-		size_t Size() const
+		// Iterators
+		// ! mashi daba
+		// * CAPACITY
+		size_type size()
 		{
 			return _size;
 		}
-
-		size_t Capacity() const
+		// size_type max_size()
+		// {
+		// 	return std::distance(_arr[0], _arr[_size]);
+		// }
+		void resize(size_type n, value_type val)
+		{
+			// n => new container size
+			// val => value to inset at index n
+			if (n > _size)
+			{
+				_arr[n] = val;
+			}
+			// else I think I have to delete elment from n index to end
+			// else
+			// 	_arr = allocator.deallocate(_arr, );
+		}
+		void resize(size_type n)
+		{
+			if (n > _size)
+				_size = n;
+			// else 
+			// 	deallocate the extra memory
+		}
+		type_size capacity()
 		{
 			return _capacity;
 		}
-
-		void pushBack(const T &value)
+		bool empty()
 		{
-			if (_size >= _capacity)
-				reAlloc(_capacity + _capacity / 2);
-			_data[_size] = value;
-			_size++;
+			return (_size == 0);
 		}
-
-		const T &operator[](size_t index) const
+		void reserve(size_type n)
 		{
-			std::cout << GREEN << "operator[]" << DEFAULT << std::endl;
-			return _data[index];
+			if (n > _capacity)
+			{
+				_capacity = n;
+				// n or greater
+			}
 		}
+		// * ELEMENT ACCESS
+		T* &operator[](size_type n)
+		{
+			return _arr[n]; 
+		}
+		T& at(size_type n)
+		{
+			if (n >= _size)
+				std::cout << RED << "OUT OF RANGE EXCEPTION" << DEFAULT << std::endl;
+			return _arr[n];
+			// Notice that the first element has a position of 0 (not 1). ????!!
+		}
+		T& front()
+		{
+			return _arr[0];
+		}
+		T& front()
+		{
+			return _arr[0];
+		}
+		T& back()
+		{
+			return _arr[_size];
+		}
+		// * MODIFIERS
+		void assign(iterator it1,iterator  it1, size_type n, )
+		{
+
+		}
+		void push_back(value_type val)
+		{
+			_arr[_size + 1]  = val;
+		}
+		void push_back(value_type val)
+		{
+			//  deallocate _arr[_size];
+		}
+		// insert()
+		
+
+
 	};
 }
 
 #endif
+
+// ? SHOULD WE HANDLE EXCEPTIONS ??

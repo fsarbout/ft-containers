@@ -139,12 +139,10 @@ namespace ft
             tmp._ptr = _ptr - n;
             return tmp;
         }
-        // it - n function
         T* &operator[](int n)
         {
             return _ptr[n];
         }
-        // operator +=
         Iterator &operator+=(int n)
         {
             _ptr += n;

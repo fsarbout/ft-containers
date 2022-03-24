@@ -4,7 +4,9 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address -std=c++98
 
-SRC = main.cpp\
+SRC = *.cpp\
+	Vector/*.cpp\
+	Iterators/*.cpp\
 	
 all : $(NAME)
 

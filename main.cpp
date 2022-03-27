@@ -1,10 +1,10 @@
-#include "Iterator.hpp"
+#include "Iterators/Iterator.hpp"
 #include <vector>
 
 int main()
 {
-    ft::Iterator<int> it1;
-    ft::Iterator<int> it2;
+    ft::iterator<int> it1;
+    ft::iterator<int> it2;
 
     std::cout << it1 <<  std::endl;
     it1++;

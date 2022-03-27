@@ -1,39 +1,49 @@
 #ifndef ITERATOR_HPP
 #define ITERATOR_HPP
 
+#define GREEN "\e[1;32m"
+#define RED "\e[1;31m"
+#define WHITE "\e[1;37m"
+#define DEFAULT "\e[0;37m"
+#define YELLOW "\e[1;33m"
+#define BLUE "\e[1;34m"
+#define PURPLE "\033[1;35m"
+
 #include <iostream>
-#include "../Helpers.hpp"
 namespace ft
 {
     template <class T>
-    class Iterator
+    class iterator
     {
     private:
         T *_ptr;
 
     public:
+
         void setPtr(T *ptr)
         {
             _ptr = ptr;
         }
-        T* getPtr() const
+        T *getPtr() const
         {
             return _ptr;
         }
         T *ptr;
-        Iterator() {
+        iterator()
+        {
             std::cout << GREEN << "CONSTRUCTOR" << DEFAULT << std::endl;
         }
-        Iterator(T *ptr) : _ptr(ptr) {
+        iterator(T *ptr) : _ptr(ptr)
+        {
             std::cout << GREEN << "PARAMETERIZED CONSTRUCTOR" << DEFAULT << std::endl;
         }
-        ~Iterator()
+        ~iterator()
         {
             std::cout << GREEN << "DESTRUCTOR" << DEFAULT << std::endl;
         }
         // * methods todo
         // TODO : copy constructor
-        Iterator(const Iterator &copy)
+        iterator(const iterator &copy)
         {
             std::cout << GREEN << "COPY CONSTRUCTOR" << DEFAULT << std::endl;
             // * return (*this) will return the current class object
@@ -41,115 +51,115 @@ namespace ft
             *this = copy;
         }
         // ? TF I need to return by reference ?!!!! both working fine
-        Iterator &operator=(const Iterator &obj)
+        iterator &operator=(const iterator &obj)
         {
-            std::cout << GREEN << "ASSIGNEMENT OPERATOR" << DEFAULT << std::endl;
+            std::cout << GREEN << "ASSIGNATION OPERATOR" << DEFAULT << std::endl;
             this->_ptr = obj._ptr;
             return *this;
         }
-        Iterator &operator++()
-        {   
+        iterator &operator++()
+        {
             std::cout << GREEN << "++ OPERATOR" << DEFAULT << std::endl;
             _ptr++;
             return *this;
         }
-        Iterator operator++(int)
-        {    
+        iterator operator++(int)
+        {
             std::cout << GREEN << "OPERATOR ++" << DEFAULT << std::endl;
-            Iterator tmp = *this;
+            iterator tmp = *this;
             ++*this;
             return tmp;
         }
-        Iterator &operator--()
-        {   
+        iterator &operator--()
+        {
             std::cout << GREEN << "-- OPERATOR" << DEFAULT << std::endl;
             _ptr--;
             return *this;
         }
-        Iterator operator--(int)
-        {    
+        iterator operator--(int)
+        {
             std::cout << GREEN << "OPERATOR --" << DEFAULT << std::endl;
-            Iterator tmp = *this;
+            iterator tmp = *this;
             --*this;
             return tmp;
         }
-        bool operator==(const Iterator &obj)
+        bool operator==(const iterator &obj)
         {
             return (this->_ptr == obj._ptr);
         }
-        bool operator!=(const Iterator &obj)
+        bool operator!=(const iterator &obj)
         {
             return (this->_ptr != obj._ptr);
         }
-        bool operator<=(const Iterator &obj)
+        bool operator<=(const iterator &obj)
         {
             return (this->_ptr <= obj._ptr);
         }
-        bool operator<(const Iterator &obj)
+        bool operator<(const iterator &obj)
         {
             return (this->_ptr < obj._ptr);
         }
-        bool operator>(const Iterator &obj)
+        bool operator>(const iterator &obj)
         {
             return (this->_ptr > obj._ptr);
         }
-        bool operator>=(const Iterator &obj)
+        bool operator>=(const iterator &obj)
         {
             return (this->_ptr >= obj._ptr);
         }
-        Iterator operator+(const Iterator &obj)
+        iterator operator+(const iterator &obj)
         {
-            // std::cout << "heoiwehgio" << std::endl;
-            Iterator tmp;
+            // std::cout << "TEST" << std::endl;
+            iterator tmp;
             tmp._ptr = obj._ptr;
             return tmp;
         }
-        Iterator operator-(const Iterator &obj)
+        iterator operator-(const iterator &obj)
         {
             // std::cout << "" << std::endl;
-            Iterator tmp;
+            iterator tmp;
             tmp._ptr = obj._ptr;
             return tmp;
         }
         // returns the value of the current object
-        T& operator*()
+        T &operator*()
         {
             return _ptr;
         }
-        // returns the address of the object
+        //  returns the address of the object
         //  should return a reference if I want to use for modification
-        T* operator->()
+        T *operator->()
         {
             return &_ptr;
         }
-        
+
         // it + n function
         // add iterator to number
-        Iterator operator+(int n)
+        iterator operator+(int n)
         {
             std::cout << "you" << std::endl;
-            Iterator tmp;
+            iterator tmp;
             tmp._ptr = _ptr + n;
             return tmp;
         }
-        Iterator operator-(int n)
+        iterator operator-(int n)
         {
             std::cout << "you" << std::endl;
-            Iterator tmp;
+            iterator tmp;
             tmp._ptr = _ptr - n;
             return tmp;
         }
-        T* &operator[](int n)
+        T *&operator[](int n)
         {
             return _ptr[n];
         }
-        Iterator &operator+=(int n)
+        iterator &operator+=(int n)
         {
             _ptr += n;
             return *this;
         }
         // operator -=
-        Iterator &operator-=(int n)
+        iterator &operator-=(int n)
         {
             _ptr -= n;
             return *this;
@@ -158,7 +168,7 @@ namespace ft
 }
 
 template <typename T>
-std::ostream &operator<<(std::ostream &out, ft::Iterator<T> it)
+std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
 {
     std::cout << GREEN << "OPERATOR <<" << DEFAULT << std::endl;
     out << &it;
@@ -166,19 +176,19 @@ std::ostream &operator<<(std::ostream &out, ft::Iterator<T> it)
 }
 
 template <typename T>
-ft::Iterator<T> operator+(int n, ft::Iterator<T> it)
+ft::iterator<T> operator+(int n, ft::iterator<T> it)
 {
     std::cout << GREEN << "OPERATOR +" << DEFAULT << std::endl;
-    ft::Iterator<T> tmp;
+    ft::iterator<T> tmp;
     tmp.setPtr(it.getPtr() + n);
     return tmp;
-}   
+}
 
 template <typename T>
-ft::Iterator<T> operator-(int n, ft::Iterator<T> it)
+ft::iterator<T> operator-(int n, ft::iterator<T> it)
 {
     std::cout << GREEN << "OPERATOR -" << DEFAULT << std::endl;
-    ft::Iterator<T> tmp;
+    ft::iterator<T> tmp;
     tmp.setPtr(it.getPtr() - n);
     return tmp;
 }
@@ -188,5 +198,5 @@ ft::Iterator<T> operator-(int n, ft::Iterator<T> it)
 // ! links
 // ! https://www.javatpoint.com/cpp-iterators
 // ! https://www.cplusplus.com/reference/iterator/
-// ! https://www.cplusplus.com/reference/iterator/RandomAccessIterator/
+// ! https://www.cplusplus.com/reference/iterator/RandomAccessiterator/
 // ! https://programmer.group/principle-and-simple-implementation-of-c-stl-iterator-just-read-this-one.html

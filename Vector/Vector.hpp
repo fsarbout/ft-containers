@@ -23,7 +23,7 @@ namespace ft
         typedef const T &const_reference;
         typedef T *pointer;
         typedef const T *const_pointer;
-        typedef T *iterator;
+        typedef ft::iterator<T> iterator;
         typedef const T *const_iterator;
         typedef std::size_t size_type;
         typedef std::ptrdiff_t difference_type;
@@ -60,6 +60,17 @@ namespace ft
             for (; first != last; ++first)
                 push_back(*first);
         }
+        // implement initializer list
+        // vector(std::initializer_list<T> l, const allocator_type &alloc = allocator_type())
+        // {
+        //     (void)alloc;
+        //     _arr = nullptr;
+        //     _size = 0;
+        //     _capacity = 0;
+        //     reserve(l.size());
+        //     for (auto it = l.begin(); it != l.end(); ++it)
+        //         push_back(*it);
+        // }
         vector (const vector& x)
         {
             this = x;
@@ -217,7 +228,7 @@ namespace ft
         {
             return const_reverse_iterator(begin());
         }
-        // assign fucntion
+        // assign function
         void assign(size_type n, const T &x)
         {
             if (n > max_size())

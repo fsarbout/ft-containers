@@ -5,9 +5,12 @@
 
 int main()
 {
-    // ft::vector<int> v = {1, 2, 3, 4, 5};
+    ft::vector<int> v(10, 35);
+    ft::vector<int>::iterator it = v.begin();
 
-   
+
+    v.insert(it, 5);
+    std::cout << v << std::endl;
     
 
 }

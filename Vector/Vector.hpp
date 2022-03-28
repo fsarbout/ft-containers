@@ -41,37 +41,30 @@ namespace ft
             : alloc(alloc), _arr(nullptr), _size(0), _capacity(0)
         {
         }
-        explicit vector(size_type n, const allocator_type &alloc = allocator_type())
-            : alloc(alloc), _arr(nullptr), _size(0), _capacity(0)
-        {
-            reserve(n);
-            for (size_type i = 0; i < n; ++i)
-                _arr[i] = T();
-            _size = n;
-        }
-        template <class InputIterator>
-        vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type())
-        {
-            (void)alloc;
-            _arr = nullptr;
-            _size = 0;
-            _capacity = 0;
-            reserve(last - first);
-            for (; first != last; ++first)
-                push_back(*first);
-        }
-        // implement initializer list
-        // vector(std::initializer_list<T> l, const allocator_type &alloc = allocator_type())
+        // template <class InputIterator>
+        // vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type())
         // {
         //     (void)alloc;
         //     _arr = nullptr;
         //     _size = 0;
         //     _capacity = 0;
-        //     reserve(l.size());
-        //     for (auto it = l.begin(); it != l.end(); ++it)
-        //         push_back(*it);
+        //     reserve(last - first);
+        //     for (; first != last; ++first)
+        //         push_back(*first);
         // }
-        vector (const vector& x)
+        explicit vector (size_type n, const value_type& val = value_type(),
+                 const allocator_type& alloc = allocator_type())
+        {
+            (void)alloc;
+            _arr = nullptr;
+            _size = 0;
+            _capacity = 0;
+            reserve(n);
+            for (size_type i = 0; i < n; ++i)
+                _arr[i] = val;
+            _size = n;
+        }
+        vector(const vector &x)
         {
             this = x;
         }
@@ -144,8 +137,6 @@ namespace ft
         void reserve(size_type n)
         {
             if (n > max_size())
-            // where to catch the exception?
-
                 throw std::length_error("length error");
             if (n > _capacity)
             {
@@ -169,16 +160,17 @@ namespace ft
                 throw std::out_of_range("out of range");
             _size--;
         }
-        iterator insert(iterator position, const T &x)
+        iterator insert(iterator pos, const T &x)
         {
+            //  implement insert with assign 
             if (_size == _capacity)
                 reserve(_capacity + 1);
-            for (size_type i = _size; i > position - _arr; --i)
-                _arr[i] = _arr[i - 1];
-            _arr[position - _arr] = x;
-            _size++;
-            return position;
+            for (size_type i = _size; i > pos; --i)
+
+
         }
+        
+
         iterator erase(iterator position)
         {
             for (size_type i = position - _arr; i < _size - 1; ++i)

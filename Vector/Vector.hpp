@@ -9,7 +9,8 @@
 #define DEFAULT "\e[0;37m"
 #define YELLOW "\e[1;33m"
 #define BLUE "\e[1;34m"
-#define PURPLE "\033[1;35m"
+#define PURPLE "\e[1;35m"
+#define COLOR "\e[1;36m"
 
 namespace ft
 {
@@ -41,6 +42,8 @@ namespace ft
             : alloc(alloc), _arr(nullptr), _size(0), _capacity(0)
         {
         }
+        // ! needs isintegral and enable if
+
         // template <class InputIterator>
         // vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type())
         // {
@@ -52,8 +55,9 @@ namespace ft
         //     for (; first != last; ++first)
         //         push_back(*first);
         // }
-        explicit vector (size_type n, const value_type& val = value_type(),
-                 const allocator_type& alloc = allocator_type())
+
+        explicit vector(size_type n, const value_type &val = value_type(),
+                        const allocator_type &alloc = allocator_type())
         {
             (void)alloc;
             _arr = nullptr;
@@ -68,6 +72,14 @@ namespace ft
         {
             this = x;
         }
+        // destructor
+        ~vector()
+        {
+            std::cout << GREEN << "DESTRUCTOR" << DEFAULT << std::endl;
+            if (_arr)
+                alloc.deallocate(_arr, _capacity);
+        }
+
         vector &operator=(const vector &x)
         {
             if (this != &x)
@@ -129,9 +141,9 @@ namespace ft
             return _arr[_size - 1];
         }
         // max size
-        static size_type max_size()
+        size_type max_size()
         {
-            return std::numeric_limits<size_type>::max();
+            return alloc.max_size();
         }
         // reserve
         void reserve(size_type n)
@@ -160,16 +172,55 @@ namespace ft
                 throw std::out_of_range("out of range");
             _size--;
         }
+        // insert reserves memory for n elements and inserts x at position n
+        // if n is greater than the size of the vector, the new elements are default constructed
+        // if n is less than the size of the vector, the new elements are copy constructed from the existing elements
+        // if n is equal to the size of the vector, the new elements are copy constructed from x
+
         iterator insert(iterator pos, const T &x)
         {
-            //  implement insert with assign 
             if (_size == _capacity)
                 reserve(_capacity + 1);
-            for (size_type i = _size; i > pos; --i)
-
-
+            for (size_type i = _size; i > pos - _arr; --i)
+                _arr[i] = _arr[i - 1];
+            _arr[pos - _arr] = x;
+            _size++;
+            return pos;
         }
+
+        // void insert checks if size is bigger than capacity and if so, it calls reserve
+        // then it inserts x at position n and moves all the elements after n to the right
+        // if n is greater than the size of the vector, the new elements are default constructed
+        void insert(iterator pos, size_type n, const T &x)
+        {
+            if (_size + n > _capacity)
+                reserve(_capacity + n);
+            for (size_type i = _size; i > pos - _arr; --i)
+                _arr[i] = _arr[i - 1];
+            for (size_type i = 0; i < n; ++i)
+                _arr[pos - _arr + i] = x;
+            _size += n;
+        }
+
+        //  ! insert with input iterator needs isintegral and enable if because of the iterator type, which is not integral
+        // ! if we don't check for is integral we get a compile error
+        // ! we check for isintegral to avoid the error of the iterator type not being integral as this example shows :
+        // ! vector<int> v;
+        // ! v.insert(v.begin(), v.begin(), v.end());
+        // ! this is not allowed because the iterator type is not integral and we can't use it in the insert function
         
+        template <class InputIterator>
+        void insert(iterator position, InputIterator first, InputIterator last)
+        {
+            size_type n = last - first;
+            if (_size + n > _capacity)
+                reserve(_capacity + n);
+            for (size_type i = _size; i > position - _arr; --i)
+                _arr[i] = _arr[i - 1];
+            for (size_type i = 0; i < n; ++i)
+                _arr[position - _arr + i] = *(first + i);
+            _size += n;
+        }
 
         iterator erase(iterator position)
         {
@@ -220,7 +271,6 @@ namespace ft
         {
             return const_reverse_iterator(begin());
         }
-        // assign function
         void assign(size_type n, const T &x)
         {
             if (n > max_size())

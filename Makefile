@@ -2,7 +2,7 @@ NAME = containers
 
 CC = c++
 
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -std=c++98
+CFLAGS = -std=c++98 -Wall -Wextra -Werror -fsanitize=address -std=gnu++0x
 
 SRC = *.cpp\
 	

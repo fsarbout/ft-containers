@@ -27,26 +27,17 @@ namespace ft
         T *_ptr;
 
     public:
-        void setPtr(T *ptr)
-        {
-            _ptr = ptr;
-        }
-        T *getPtr() const
-        {
-            return _ptr;
-        }
-        T *ptr;
         iterator()
         {
-            std::cout << COLOR << "CONSTRUCTOR" << DEFAULT << std::endl;
+            std::cout << COLOR << "iterator default constructor" << DEFAULT << std::endl;
         }
         iterator(T *ptr) : _ptr(ptr)
         {
-            std::cout << COLOR << "PARAMETERIZED CONSTRUCTOR" << DEFAULT << std::endl;
+            std::cout << COLOR << "iterator default constructor" << DEFAULT << std::endl;
         }
         ~iterator()
         {
-            std::cout << COLOR << "DESTRUCTOR" << DEFAULT << std::endl;
+            std::cout << COLOR << "destructor" << DEFAULT << std::endl;
         }
         // * methods todo
         // TODO : copy constructor

@@ -27,6 +27,7 @@ namespace ft
             // dereferencing operator
             reference operator*() const
             {
+                // ? 
                 return *(_it - 1);
             }
             // prefix increment operator

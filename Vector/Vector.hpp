@@ -14,6 +14,7 @@
 
 namespace ft
 {
+
     template <typename T>
     class vector
     {
@@ -42,7 +43,7 @@ namespace ft
         explicit vector(const allocator_type &alloc = allocator_type()) : alloc(alloc), _arr(nullptr), _size(0), _capacity(0)
         {
             //  constructs empty container with no elements
-            std::cout << YELLOW << "VECTOR DEFAULT CONSTRUCTOR" << DEFAULT << std:: endl;
+            std::cout << YELLOW << "VECTOR DEFAULT CONSTRUCTOR" << DEFAULT << std::endl;
         }
 
         // ! needs is integral and enable if
@@ -91,12 +92,11 @@ namespace ft
                 for (size_type i = 0; i < _size; ++i)
                     _arr[i] = x._arr[i];
             }
-            // std::cout << "so9 mok (1) ?" << this << std::endl;
-            // std::cout << "so9 mok (2) ?" << *this << std::endl;
             return *this;
             // the return statement is "return *this", rather than "return this".
             // That's because this is a pointer to Vector.
             // You have to dereference it to get a reference to Vector.
+
         }
         // ! short functions
         // * begin() related infos
@@ -128,7 +128,7 @@ namespace ft
         const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
         // ***** //
 
-        vector(const vector &x) { this = x; }
+        vector(const vector &x) { *this = x; }
 
         // get_allocator returns a copy of the allocator object used by the vector
         allocator_type get_allocator() const { return alloc; }
@@ -244,35 +244,46 @@ namespace ft
         // ! v.insert(v.begin(), v.begin(), v.end());
         // ! this is not allowed because the iterator type is not integral and we can't use it in the insert function
 
-        template <class InputIterator>
-        void insert(iterator position, InputIterator first, InputIterator last)
-        {
-            size_type n = last - first;
-            if (_size + n > _capacity)
-                reserve(_capacity + n);
-            for (size_type i = _size; i > position - _arr; --i)
-                _arr[i] = _arr[i - 1];
-            for (size_type i = 0; i < n; ++i)
-                _arr[position - _arr + i] = *(first + i);
-            _size += n;
-        }
-        // erase removes the element at position n and moves all the elements after n to the left 
+        // TODO: need to fix integral, enable if
+        // template <class InputIterator>
+        // void insert(iterator position, InputIterator first, InputIterator last)
+        // {
+        //     size_type n = last - first;
+        //     if (_size + n > _capacity)
+        //         reserve(_capacity + n);
+        //     for (size_type i = _size; i > position - _arr; --i)
+        //         _arr[i] = _arr[i - 1];
+        //     for (size_type i = 0; i < n; ++i)
+        //         _arr[position - _arr + i] = *(first + i);
+        //     _size += n;
+        // }
+
+        // erase removes the element at position n and moves all the elements after n to the left
         // example : vector<int> v;
         // v.erase(v.begin());
         // v.erase(v.begin() + 1);
         iterator erase(iterator pos)
-        {
+        {        
+            // difference_type i = std::distance(pos , _arr);
+
             for (size_type i = pos - _arr; i < _size - 1; ++i)
                 _arr[i] = _arr[i + 1];
             _size--;
             return pos;
         }
+
+        // 1 2 3 4 5 6 7 8 9 10
+        // erase(begin() + 5); >> will remove the element at position 6 and move all the elements after position 5 to the left
+        // 1 2 3 4 5 7 8 9 10
+        
         iterator erase(iterator first, iterator last)
         {
-            size_type n = last - first;
-            for (size_type i = first - _arr; i < _size - n; ++i)
-                _arr[i] = _arr[i + n];
-            _size -= n;
+            difference_type t = std::distance(first, last);
+            std::cout << t <<  std::endl;
+            // size_type n = last - first;
+            // for (size_type i = first - _arr; i < _size - n; ++i)
+            //     _arr[i] = _arr[i + n];
+            // _size -= n;
             return first;
         }
         void swap(vector &x)
@@ -281,42 +292,45 @@ namespace ft
             std::swap(_size, x._size);
             std::swap(_capacity, x._capacity);
         }
-        void assign(size_type n, const T &x)
-        {
-            if (n > max_size())
-                throw std::length_error("length error");
-            if (n > _capacity)
-            {
-                pointer tmp = alloc.allocate(n);
-                for (size_type i = 0; i < _size; ++i)
-                    tmp[i] = _arr[i];
-                alloc.deallocate(_arr, _capacity);
-                _arr = tmp;
-                _capacity = n;
-            }
-            for (size_type i = 0; i < n; ++i)
-                _arr[i] = x;
-            _size = n;
-        }
-        template <class InputIterator>
-        void assign(InputIterator first, InputIterator last)
-        {
-            size_type n = last - first;
-            if (n > max_size())
-                throw std::length_error("length error");
-            if (n > _capacity)
-            {
-                pointer tmp = alloc.allocate(n);
-                for (size_type i = 0; i < _size; ++i)
-                    tmp[i] = _arr[i];
-                alloc.deallocate(_arr, _capacity);
-                _arr = tmp;
-                _capacity = n;
-            }
-            for (size_type i = 0; i < n; ++i)
-                _arr[i] = first[i];
-            _size = n;
-        }
+
+        // void assign(size_type n, const T &x)
+        // {
+        //     if (n > max_size())
+        //         throw std::length_error("length error");
+        //     if (n > _capacity)
+        //     {
+        //         pointer tmp = alloc.allocate(n);
+        //         for (size_type i = 0; i < _size; ++i)
+        //             tmp[i] = _arr[i];
+        //         alloc.deallocate(_arr, _capacity);
+        //         _arr = tmp;
+        //         _capacity = n;
+        //     }
+        //     for (size_type i = 0; i < n; ++i)
+        //         _arr[i] = x;
+        //     _size = n;
+        // }
+
+        // TODO: need to fix integral, enable if
+        // template <class InputIterator>
+        // void assign(InputIterator first, InputIterator last)
+        // {
+        //     size_type n = last - first;
+        //     if (n > max_size())
+        //         throw std::length_error("length error");
+        //     if (n > _capacity)
+        //     {
+        //         pointer tmp = alloc.allocate(n);
+        //         for (size_type i = 0; i < _size; ++i)
+        //             tmp[i] = _arr[i];
+        //         alloc.deallocate(_arr, _capacity);
+        //         _arr = tmp;
+        //         _capacity = n;
+        //     }
+        //     for (size_type i = 0; i < n; ++i)
+        //         _arr[i] = first[i];
+        //     _size = n;
+        // }
 
         // resize
         void resize(size_type n)
@@ -355,7 +369,7 @@ std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
 // reserve : // * done
 // operator[] : // * done
 // resize : // * done
-// swap : // ? quesition : what about swaping allocators ? 
+// swap : // ? quesition : what about swaping allocators ?
 // operator= : // * done
 // assign :
 // insert :

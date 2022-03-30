@@ -1,12 +1,11 @@
 #ifndef ITERATOR_HPP
 #define ITERATOR_HPP
 
-#define COLOR "\e[1;36m"
 // #define RED "\e[1;31m"
 // #define WHITE "\e[1;37m"
 #define DEFAULT "\e[0;37m"
-// #define YELLOW "\e[1;33m"
-// #define BLUE "\e[1;34m"
+#define YELLOW "\e[1;33m"
+#define BLUE "\e[1;34m"
 // #define PURPLE "\033[1;35m"
 
 
@@ -29,21 +28,21 @@ namespace ft
     public:
         iterator()
         {
-            std::cout << COLOR << "iterator default constructor" << DEFAULT << std::endl;
+            std::cout << BLUE << "iterator default constructor" << DEFAULT << std::endl;
         }
         iterator(T *ptr) : _ptr(ptr)
         {
-            std::cout << COLOR << "iterator default constructor" << DEFAULT << std::endl;
+            std::cout << YELLOW << "iterator param constructor" << DEFAULT << std::endl;
         }
         ~iterator()
         {
-            std::cout << COLOR << "destructor" << DEFAULT << std::endl;
+            std::cout << YELLOW << "destructor" << DEFAULT << std::endl;
         }
         // * methods todo
         // TODO : copy constructor
         iterator(const iterator &copy)
         {
-            std::cout << COLOR << "COPY CONSTRUCTOR" << DEFAULT << std::endl;
+            std::cout << YELLOW << "iterator copy constructor" << DEFAULT << std::endl;
             // * return (*this) will return the current class object
             // * return (this ) will return the current class  address
             *this = copy;
@@ -51,32 +50,32 @@ namespace ft
         // ? TF I need to return by reference ?!!!! both working fine
         iterator &operator=(const iterator &obj)
         {
-            std::cout << COLOR << "ASSIGNATION OPERATOR" << DEFAULT << std::endl;
+            std::cout << YELLOW << "iterator assignation operator  (it)" << DEFAULT << std::endl;
             this->_ptr = obj._ptr;
             return *this;
         }
         iterator &operator++()
         {
-            std::cout << COLOR << "++ OPERATOR" << DEFAULT << std::endl;
+            std::cout << YELLOW << "++ operator (it)" << DEFAULT << std::endl;
             _ptr++;
             return *this;
         }
         iterator operator++(int)
         {
-            std::cout << COLOR << "OPERATOR ++" << DEFAULT << std::endl;
+            std::cout << YELLOW << "operator ++ (it)" << DEFAULT << std::endl;
             iterator tmp = *this;
             ++*this;
             return tmp;
         }
         iterator &operator--()
         {
-            std::cout << COLOR << "-- OPERATOR" << DEFAULT << std::endl;
+            std::cout << YELLOW << "-- operator (it)" << DEFAULT << std::endl;
             _ptr--;
             return *this;
         }
         iterator operator--(int)
         {
-            std::cout << COLOR << "OPERATOR --" << DEFAULT << std::endl;
+            std::cout << YELLOW << "operator -- (it)" << DEFAULT << std::endl;
             iterator tmp = *this;
             --*this;
             return tmp;
@@ -171,7 +170,7 @@ namespace ft
 template <typename T>
 std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
 {
-    std::cout << COLOR << "OPERATOR <<" << DEFAULT << std::endl;
+    std::cout << YELLOW << "OPERATOR <<" << DEFAULT << std::endl;
     out << &it;
     return out;
 }
@@ -179,7 +178,7 @@ std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
 template <typename T>
 ft::iterator<T> operator+(int n, ft::iterator<T> it)
 {
-    std::cout << COLOR << "OPERATOR +" << DEFAULT << std::endl;
+    std::cout << YELLOW << "OPERATOR +" << DEFAULT << std::endl;
     ft::iterator<T> tmp;
     tmp.setPtr(it.getPtr() + n);
     return tmp;
@@ -188,7 +187,7 @@ ft::iterator<T> operator+(int n, ft::iterator<T> it)
 template <typename T>
 ft::iterator<T> operator-(int n, ft::iterator<T> it)
 {
-    std::cout << COLOR << "OPERATOR -" << DEFAULT << std::endl;
+    std::cout << YELLOW << "OPERATOR -" << DEFAULT << std::endl;
     ft::iterator<T> tmp;
     tmp.setPtr(it.getPtr() - n);
     return tmp;

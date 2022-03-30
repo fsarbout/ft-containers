@@ -4,8 +4,8 @@
 
 int main()
 {
-    // ! std::vector test 
-    // std::cout << PURPLE << "std tests" << DEFAULT << std::endl; 
+    // ! std::vector test
+    // std::cout << PURPLE << "std tests" << DEFAULT << std::endl;
     // std::vector<int> values(10, 35);
     // for (size_t i = 0; i < values.size(); i++)
     //     std::cout << values[i] << std::endl;
@@ -17,6 +17,7 @@ int main()
     // ! vector test
     ft::vector<int> v(10, 35);
     // ! iterator test
+    // ft::vector <int> v2 = v;
     ft::vector<int>::iterator it2 = v.begin();
     ft::vector<int>::iterator it3 = v.end();
     v.erase(it2, it3);
@@ -28,5 +29,5 @@ int main()
     // operator -> the current position of iterator
 }
 
-// TODO: c 
-// 
+// TODO: c
+//

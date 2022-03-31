@@ -12,6 +12,11 @@
 #define PURPLE "\e[1;35m"
 #define COLOR "\e[1;36m"
 
+// note : install "better comments" to highlight comments"
+// ? question
+// * answer
+// ** example
+
 namespace ft
 {
 
@@ -43,7 +48,7 @@ namespace ft
         explicit vector(const allocator_type &alloc = allocator_type()) : alloc(alloc), _arr(nullptr), _size(0), _capacity(0)
         {
             //  constructs empty container with no elements
-            std::cout << YELLOW << "VECTOR DEFAULT CONSTRUCTOR" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "VECTOR DEFAULT CONSTRUCTOR" << DEFAULT << std::endl;
         }
 
         // ! needs is integral and enable if
@@ -60,6 +65,7 @@ namespace ft
                 _arr[i] = val;
             _size = n;
         }
+        vector(const vector &x) { *this = x; }
 
         // ! IDK
         // template <class InputIterator>
@@ -96,39 +102,36 @@ namespace ft
             // the return statement is "return *this", rather than "return this".
             // That's because this is a pointer to Vector.
             // You have to dereference it to get a reference to Vector.
-
         }
         // ! short functions
-        // * begin() related infos
-        // ? begin()
-        // begin returns an iterator to the first element in the vector
-        // :this iterator is a pointer to the first element in the vector
-        // _arr and _arr[0] are the same
-        // ? why is it returning _arr and its return type is iterator ?
-        // (we want to use the iterator to access the elements in the vector.)
-        iterator begin() { return _arr; }
+        iterator begin()
+        {
+            // begin returns an iterator(pointer) to the first element in the vector
+            // _arr and _arr[0] are the same (_arr is the address of the first element)
+            return _arr;
+        }
         const_iterator begin() const { return _arr; }
-        // ***** //
 
-        // * end()... related infos
-        // ?  _arr + _size vs _arr[_size] vs *(_arr + _size) ?
-        // (_arr + _size) this one returns and iterator , so basically it is a pointer to the last element in the vector
-        // _arr[_size] and *(arr + _size) will return the last element in the vector
-        iterator end() { return _arr + _size; }
+        iterator end()
+        {
+            // ?  _arr + _size vs _arr[_size] vs *(_arr + _size) ?
+            // (_arr + _size) this one returns and iterator , so basically it is a pointer to the last element in the vector
+            // _arr[_size] and *(arr + _size) will return the last element in the vector
+            return _arr + _size;
+        }
         const_iterator end() const { return _arr + _size; }
-        // ***** //
 
-        // * rend() rbegin()... related infos
-        // ? rbegin()
-        // rbegin returns an iterator to the last element in the vector
-        // ? why don't we just use end() ? : it returns reverse_iterator
-        reverse_iterator rbegin() { return reverse_iterator(end()); }
+        reverse_iterator rbegin()
+        {
+            // rbegin returns an iterator to the last element in the vector
+            // ? why don't we just use end() ? 
+            // * in STL it returns a reverse_iterator 
+            return reverse_iterator(end());
+        }
         const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
         reverse_iterator rend() { return reverse_iterator(begin()); }
         const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
-        // ***** //
 
-        vector(const vector &x) { *this = x; }
 
         // get_allocator returns a copy of the allocator object used by the vector
         allocator_type get_allocator() const { return alloc; }
@@ -228,6 +231,13 @@ namespace ft
         // if n is greater than the size of the vector, the new elements are default constructed
         void insert(iterator pos, size_type n, const T &x)
         {
+            // ? what does this function do ?
+            // * it inserts n copies of x at position pos
+            // ** example : insert(begin(), 3, 'a') will insert 3 'a' at the beginning of the vector, vector will contain {'a', 'a', 'a'}
+            // ? how does it work ?
+            // * it calls reserve to allocate memory for n elements
+            // 
+            // 
             if (_size + n > _capacity)
                 reserve(_capacity + n);
             for (size_type i = _size; i > pos - _arr; --i)
@@ -239,7 +249,7 @@ namespace ft
 
         // ! insert with input iterator needs is integral and enable if because of the iterator type, which is not integral
         // ! if we don't check for is integral we get a compile error
-        // ! we check for is integral to avoid the error of the iterator type not being integral as this example shows :
+        // ! we check for is integral to avoid the error of the iterator type not being integral as this example shows:
         // ! vector<int> v;
         // ! v.insert(v.begin(), v.begin(), v.end());
         // ! this is not allowed because the iterator type is not integral and we can't use it in the insert function
@@ -263,9 +273,19 @@ namespace ft
         // v.erase(v.begin());
         // v.erase(v.begin() + 1);
         iterator erase(iterator pos)
-        {        
-            // difference_type i = std::distance(pos , _arr);
-
+        {
+            // ? what does this function do ?
+            // * it removes the element at position n and moves all the elements after n to the left
+            // ** example : vector<int> v; (v contains {1, 2, 3, 4, 5}), v.erase(v.begin() + 1) will result in {1, 3, 4, 5},
+            // ** it will remove the element at position 1 and move all the elements after position 1 to the left
+            // ? how does this function work ?
+            // * arr is a pointer to the first element in the array
+            // * pos is a pointer to the element we want to remove
+            // * the distance between pos and arr is the index of the element we want to remove
+            // * the distance is calculated in iterator operator - , which is the distance between two iterators, basically two pointers
+            // * we decrease the size of the vector by 1 because we removed one element
+            // ? return value ?
+            // * in stl this function returns an iterator to the element after the removed element, so the pos of the removed element
             for (size_type i = pos - _arr; i < _size - 1; ++i)
                 _arr[i] = _arr[i + 1];
             _size--;
@@ -275,15 +295,19 @@ namespace ft
         // 1 2 3 4 5 6 7 8 9 10
         // erase(begin() + 5); >> will remove the element at position 6 and move all the elements after position 5 to the left
         // 1 2 3 4 5 7 8 9 10
-        
+
         iterator erase(iterator first, iterator last)
         {
-            difference_type t = std::distance(first, last);
-            std::cout << t <<  std::endl;
-            // size_type n = last - first;
-            // for (size_type i = first - _arr; i < _size - n; ++i)
-            //     _arr[i] = _arr[i + n];
-            // _size -= n;
+            // ? what does this function do ?
+            // * it removes the elements between first and last and moves all the elements after last to the left
+            // * the last element is not included in the range
+            // ** example : vector<int> v; (v contains {1, 2, 3, 4, 5}), v.erase(v.begin() + 1, v.begin() + 3) will result in {1, 5},
+            // difference_type first = std::distance(first, last);
+            // std::cout << t << std::endl;
+            size_type n = last - first;
+            for (size_type i = first - _arr; i < _size - n; ++i)
+                _arr[i] = _arr[i + n];
+            _size -= n;
             return first;
         }
         void swap(vector &x)
@@ -293,23 +317,23 @@ namespace ft
             std::swap(_capacity, x._capacity);
         }
 
-        // void assign(size_type n, const T &x)
-        // {
-        //     if (n > max_size())
-        //         throw std::length_error("length error");
-        //     if (n > _capacity)
-        //     {
-        //         pointer tmp = alloc.allocate(n);
-        //         for (size_type i = 0; i < _size; ++i)
-        //             tmp[i] = _arr[i];
-        //         alloc.deallocate(_arr, _capacity);
-        //         _arr = tmp;
-        //         _capacity = n;
-        //     }
-        //     for (size_type i = 0; i < n; ++i)
-        //         _arr[i] = x;
-        //     _size = n;
-        // }
+        void assign(size_type n, const T &x)
+        {
+            if (n > max_size())
+                throw std::length_error("length error");
+            if (n > _capacity)
+            {
+                pointer tmp = alloc.allocate(n);
+                for (size_type i = 0; i < _size; ++i)
+                    tmp[i] = _arr[i];
+                alloc.deallocate(_arr, _capacity);
+                _arr = tmp;
+                _capacity = n;
+            }
+            for (size_type i = 0; i < n; ++i)
+                _arr[i] = x;
+            _size = n;
+        }
 
         // TODO: need to fix integral, enable if
         // template <class InputIterator>
@@ -347,6 +371,30 @@ namespace ft
             _size = n;
         }
     };
+
+    // template <class T, class Alloc>
+    // bool operator==(const vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs)
+    // {
+    //     if (lhs.size() != rhs.size())
+    //         return false;
+    //     for (size_t i = 0; i < lhs.size(); ++i)
+    //         if (lhs[i] != rhs[i])
+    //             return false;
+    //     return true;
+    // }
+
+    // template <typedef T, class Alloc>
+    // bool operator!=(const vector<T, Alloc> &lhs, const vector<T, Alloc> &rhs)
+    // {
+    //     return !(lhs == rhs);
+    // }
+
+    // template <typedef T, class Alloc>
+    // bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    // {
+    //     return std::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+    // }
+
 }
 
 template <typename T>
@@ -371,9 +419,9 @@ std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
 // resize : // * done
 // swap : // ? quesition : what about swaping allocators ?
 // operator= : // * done
-// assign :
+// assign : 
 // insert :
-// erase :
+// erase : // * done
 // clear : // * done
 // push_back : // * done
 // pop_back : // * done
@@ -383,7 +431,7 @@ std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
 // TODO: non member functions
 // * 1 :
 // template <class T, class Alloc>
-// bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);
+// bool operator== (const vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs);
 // * 2 :
 // template <class T, class Alloc>
 //   bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);

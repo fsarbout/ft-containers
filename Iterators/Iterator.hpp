@@ -8,7 +8,6 @@
 #define BLUE "\e[1;34m"
 // #define PURPLE "\033[1;35m"
 
-
 #include <iostream>
 namespace ft
 {
@@ -17,32 +16,32 @@ namespace ft
     {
     public:
         typedef T value_type;
-        typedef ptrdiff_t difference_type;
-        typedef T* pointer;
-        typedef T& reference;
+        typedef std::ptrdiff_t difference_type;
+        typedef T *pointer;
+        typedef T &reference;
         typedef ft::iterator<T> iterator_category;
-
+        // std::ptrdiff_t is the signed integer type of the result of subtracting two pointers.
     private:
         T *_ptr;
 
     public:
         iterator()
         {
-            std::cout << BLUE << "iterator default constructor" << DEFAULT << std::endl;
+            // std::cout << BLUE << "iterator default constructor" << DEFAULT << std::endl;
         }
         iterator(T *ptr) : _ptr(ptr)
         {
-            std::cout << YELLOW << "iterator param constructor" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "iterator param constructor" << DEFAULT << std::endl;
         }
         ~iterator()
         {
-            std::cout << YELLOW << "destructor" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "destructor" << DEFAULT << std::endl;
         }
         // * methods todo
         // TODO : copy constructor
         iterator(const iterator &copy)
         {
-            std::cout << YELLOW << "iterator copy constructor" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "iterator copy constructor" << DEFAULT << std::endl;
             // * return (*this) will return the current class object
             // * return (this ) will return the current class  address
             *this = copy;
@@ -50,32 +49,32 @@ namespace ft
         // ? TF I need to return by reference ?!!!! both working fine
         iterator &operator=(const iterator &obj)
         {
-            std::cout << YELLOW << "iterator assignation operator  (it)" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "iterator assignation operator  (it)" << DEFAULT << std::endl;
             this->_ptr = obj._ptr;
             return *this;
         }
         iterator &operator++()
         {
-            std::cout << YELLOW << "++ operator (it)" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "++ operator (it)" << DEFAULT << std::endl;
             _ptr++;
             return *this;
         }
         iterator operator++(int)
         {
-            std::cout << YELLOW << "operator ++ (it)" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "operator ++ (it)" << DEFAULT << std::endl;
             iterator tmp = *this;
             ++*this;
             return tmp;
         }
         iterator &operator--()
         {
-            std::cout << YELLOW << "-- operator (it)" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "-- operator (it)" << DEFAULT << std::endl;
             _ptr--;
             return *this;
         }
         iterator operator--(int)
         {
-            std::cout << YELLOW << "operator -- (it)" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "operator -- (it)" << DEFAULT << std::endl;
             iterator tmp = *this;
             --*this;
             return tmp;
@@ -106,42 +105,45 @@ namespace ft
         }
         iterator operator+(const iterator &obj)
         {
-            // std::cout << "TEST" << std::endl;
-            iterator tmp;
-            tmp._ptr = obj._ptr;
+            std::cout << YELLOW << "operator + (it)" << DEFAULT << std::endl;
+            iterator tmp = *this;
+            tmp._ptr += obj._ptr;
             return tmp;
         }
-        iterator operator-(const iterator &obj)
+        // operator - returns distance between two iterators
+        // we get the value at position 
+        difference_type operator-(const iterator &obj)
         {
-            // std::cout << "" << std::endl;
-            iterator tmp;
-            tmp._ptr = obj._ptr;
-            return tmp;
+            // * Subtraction gives you the distance - the number of steps from one point to the other
+            // std::cout << YELLOW << "operator - (it)" << DEFAULT << std::endl;
+            // std::cout << "this ptr : " << *this->_ptr << std::endl;
+            // std::cout << "obj ptr : " << *obj._ptr << std::endl;
+            // std::cout << "diff : " << this->_ptr - obj._ptr << std::endl;
+            // std::distance
+            return (this->_ptr - obj._ptr);
         }
-        // returns the value of the current object
         T &operator*()
         {
+            // returns the value of the current object
             return *_ptr;
         }
-        //  returns the address of the object
-        //  should return a reference if I want to use for modification
         T *operator->()
         {
+            //  returns the address of the object
+            //  should return a reference if I want to use for modification
             return &_ptr;
         }
 
-        // it + n function
-        // add iterator to number
         iterator operator+(int n)
         {
-            std::cout << "you" << std::endl;
+            // std::cout << "you" << std::endl;
             iterator tmp;
             tmp._ptr = _ptr + n;
             return tmp;
         }
         iterator operator-(int n)
         {
-            std::cout << "you" << std::endl;
+            // std::cout << "you" << std::endl;
             iterator tmp;
             tmp._ptr = _ptr - n;
             return tmp;
@@ -170,7 +172,7 @@ namespace ft
 template <typename T>
 std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
 {
-    std::cout << YELLOW << "OPERATOR <<" << DEFAULT << std::endl;
+    // std::cout << YELLOW << "OPERATOR <<" << DEFAULT << std::endl;
     out << &it;
     return out;
 }

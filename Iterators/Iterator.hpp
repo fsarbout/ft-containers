@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <cstddef>
+#include <typeinfo>
 #include <iterator>
 
 namespace ft
@@ -19,10 +20,10 @@ namespace ft
     {
     public:
         typedef T value_type;
-        typedef ptrdiff_t difference_type;
+        typedef std::ptrdiff_t difference_type;
         typedef T* pointer;
         typedef T& reference;
-        // typedef ft::iterator<value_type> iterator_category;
+        typedef std::random_access_iterator_tag iterator_category;
         // std::ptrdiff_t is the signed integer type of the result of subtracting two pointers.
     private:
         pointer _ptr;
@@ -118,7 +119,7 @@ namespace ft
         difference_type operator-(const iterator &obj)
         {
             // * Subtraction gives you the distance - the number of steps from one point to the other
-            // std::cout << YELLOW << "operator - (it)" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "operator - (it)" << DEFAULT << std::endl; 
             std::cout << "they called me " << std::endl;
             std::cout << "obj ptr : " << obj._ptr << std::endl;
             std::cout << "this ptr : " << *_ptr << std::endl;

@@ -4,6 +4,7 @@
 #include <iostream>
 #include <cstddef>
 #include <iterator>
+#include <typeinfo>
 
 
 #define GREEN "\e[1;32m"
@@ -33,9 +34,9 @@ namespace ft
         typedef T *pointer;
         typedef const T *const_pointer;
         typedef ft::iterator<value_type> iterator;
-        typedef const ft::iterator<value_type> const_iterator;
+        typedef const ft::iterator<const value_type> const_iterator;
         typedef size_t size_type;
-        typedef ptrdiff_t difference_type;
+        typedef std::ptrdiff_t difference_type;
         typedef std::reverse_iterator<iterator> reverse_iterator;
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -225,8 +226,8 @@ namespace ft
             if (_size == _capacity)
                 reserve(_capacity + 1);
             // for (size_type i = pos - _arr; i < _size - 1; ++i)
-            // size_type t = std::distance(begin(), pos);
-            // std::cout << "difference : " << t << std::endl;
+            size_type t = std::distance(begin(), pos);
+            std::cout << "difference : " << t << std::endl;
             for (difference_type i = _size; i > pos - begin(); --i)
             {
                 if (i - 1 < 0)

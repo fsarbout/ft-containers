@@ -9,6 +9,9 @@
 // #define PURPLE "\033[1;35m"
 
 #include <iostream>
+#include <cstddef>
+#include <iterator>
+
 namespace ft
 {
     template <class T>
@@ -16,20 +19,20 @@ namespace ft
     {
     public:
         typedef T value_type;
-        typedef std::ptrdiff_t difference_type;
-        typedef T *pointer;
-        typedef T &reference;
-        typedef ft::iterator<T> iterator_category;
+        typedef ptrdiff_t difference_type;
+        typedef T* pointer;
+        typedef T& reference;
+        // typedef ft::iterator<value_type> iterator_category;
         // std::ptrdiff_t is the signed integer type of the result of subtracting two pointers.
     private:
-        T *_ptr;
+        pointer _ptr;
 
     public:
         iterator()
         {
             // std::cout << BLUE << "iterator default constructor" << DEFAULT << std::endl;
         }
-        iterator(T *ptr) : _ptr(ptr)
+        iterator(pointer ptr) : _ptr(ptr)
         {
             // std::cout << YELLOW << "iterator param constructor" << DEFAULT << std::endl;
         }
@@ -116,12 +119,17 @@ namespace ft
         {
             // * Subtraction gives you the distance - the number of steps from one point to the other
             // std::cout << YELLOW << "operator - (it)" << DEFAULT << std::endl;
-            // std::cout << "this ptr : " << *this->_ptr << std::endl;
-            // std::cout << "obj ptr : " << *obj._ptr << std::endl;
-            // std::cout << "diff : " << this->_ptr - obj._ptr << std::endl;
+            std::cout << "they called me " << std::endl;
+            std::cout << "obj ptr : " << obj._ptr << std::endl;
+            std::cout << "this ptr : " << *_ptr << std::endl;
+            // std::cout << "difference : " << this->_ptr - obj._ptr << std::endl;
             // std::distance
             return (this->_ptr - obj._ptr);
         }
+        // difference_type operator-(const iterator &obj) const
+        // {
+        //     return (this->_ptr - obj._ptr);
+        // }
         T &operator*()
         {
             // returns the value of the current object
@@ -162,6 +170,10 @@ namespace ft
         {
             _ptr -= n;
             return *this;
+        }
+        operator iterator<const value_type>() const
+        { 
+            return iterator<const value_type>(_ptr);
         }
     };
 

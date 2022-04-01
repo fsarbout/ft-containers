@@ -2,6 +2,9 @@
 #define VECTOR_HPP
 
 #include <iostream>
+#include <cstddef>
+#include <iterator>
+
 
 #define GREEN "\e[1;32m"
 #define RED "\e[1;31m"
@@ -19,21 +22,20 @@
 
 namespace ft
 {
-
     template <typename T>
     class vector
     {
     public:
         typedef T value_type;
-        typedef std::allocator<T> allocator_type;
-        typedef T &reference;
+        typedef std::allocator<value_type> allocator_type;
+        typedef T& reference;
         typedef const T &const_reference;
         typedef T *pointer;
         typedef const T *const_pointer;
-        typedef ft::iterator<T> iterator;
-        typedef const T *const_iterator;
-        typedef std::size_t size_type;
-        typedef std::ptrdiff_t difference_type;
+        typedef ft::iterator<value_type> iterator;
+        typedef const ft::iterator<value_type> const_iterator;
+        typedef size_t size_type;
+        typedef ptrdiff_t difference_type;
         typedef std::reverse_iterator<iterator> reverse_iterator;
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
@@ -124,14 +126,13 @@ namespace ft
         reverse_iterator rbegin()
         {
             // rbegin returns an iterator to the last element in the vector
-            // ? why don't we just use end() ? 
-            // * in STL it returns a reverse_iterator 
+            // ? why don't we just use end() ?
+            // * in STL it returns a reverse_iterator
             return reverse_iterator(end());
         }
         const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
         reverse_iterator rend() { return reverse_iterator(begin()); }
         const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
-
 
         // get_allocator returns a copy of the allocator object used by the vector
         allocator_type get_allocator() const { return alloc; }
@@ -210,17 +211,28 @@ namespace ft
                 throw std::out_of_range("out of range");
             _size--;
         }
-        // insert reserves memory for n elements and inserts x at position n
-        // if n is greater than the size of the vector, the new elements are default constructed
-        // if n is less than the size of the vector, the new elements are copy constructed from the existing elements
-        // if n is equal to the size of the vector, the new elements are copy constructed from x
-
         iterator insert(iterator pos, const T &x)
         {
+            // insert reserves memory for n elements and inserts x at position n
+            // if n is greater than the size of the vector, the new elements are default constructed
+            // if n is less than the size of the vector, the new elements are copy constructed from the existing elements
+            // if n is equal to the size of the vector, the new elements are copy constructed from x
+            std::cout << "hello" << std::endl;
+            std::cout << "pos&: " << pos << std::endl;
+            std::cout << "pos: " << *pos << std::endl;
+            std::cout << "arr: " << _arr << std::endl;
+            std::cout << "*arr: " << *_arr << std::endl;
             if (_size == _capacity)
                 reserve(_capacity + 1);
-            for (size_type i = _size; i > pos - _arr; --i)
+            // for (size_type i = pos - _arr; i < _size - 1; ++i)
+            // size_type t = std::distance(begin(), pos);
+            // std::cout << "difference : " << t << std::endl;
+            for (difference_type i = _size; i > pos - begin(); --i)
+            {
+                if (i - 1 < 0)
+                    return 0;
                 _arr[i] = _arr[i - 1];
+            }
             _arr[pos - _arr] = x;
             _size++;
             return pos;
@@ -236,17 +248,39 @@ namespace ft
             // ** example : insert(begin(), 3, 'a') will insert 3 'a' at the beginning of the vector, vector will contain {'a', 'a', 'a'}
             // ? how does it work ?
             // * it calls reserve to allocate memory for n elements
-            // 
-            // 
+            //
+            //
+            std::cout << "ba9i ma segvaultit" << std::endl;
             if (_size + n > _capacity)
                 reserve(_capacity + n);
-            for (size_type i = _size; i > pos - _arr; --i)
+            // std::cout << "this-size: " << this->_size << std::endl;
+            // std::cout << "this-capacity: " << this->_capacity << std::endl;
+
+            for (size_type i = _size; i > pos - _arr ; --i)
+            {
+                // pos is a pointer to the element we want to insert
+                // (pos - _arr) is the index of the element we want to insert
+                std::cout << "pos: " << pos  << std::endl;
+                std::cout << "arr: " << _arr  << std::endl;
+                std::cout << "pos - arr: " << pos - _arr  << std::endl;
+                // std::cout << "this-size: " << this->_size << std::endl;
+                // std::cout << "this-capacity: " << this->_capacity << std::endl;
+                // std::cout << "i: " << i << std::endl;
+                // i - 1 will fail in case of i = 0 , so we will handle it by 
+                if (i - 1 < 0)
+                {
+                    _arr[i] = _arr[0];
+                    return;
+                }
+                    // exit(1);
+                
                 _arr[i] = _arr[i - 1];
+            }
+            // std::cout << "ina lillah" << std::endl;
             for (size_type i = 0; i < n; ++i)
                 _arr[pos - _arr + i] = x;
             _size += n;
         }
-
         // ! insert with input iterator needs is integral and enable if because of the iterator type, which is not integral
         // ! if we don't check for is integral we get a compile error
         // ! we check for is integral to avoid the error of the iterator type not being integral as this example shows:
@@ -272,6 +306,7 @@ namespace ft
         // example : vector<int> v;
         // v.erase(v.begin());
         // v.erase(v.begin() + 1);
+
         iterator erase(iterator pos)
         {
             // ? what does this function do ?
@@ -316,9 +351,15 @@ namespace ft
             std::swap(_size, x._size);
             std::swap(_capacity, x._capacity);
         }
-
+        // assign vs insert :
+        // assign is used to assign a new value to all the elements in the vector
+        // insert is used to insert a new element at the end of the vector(specified position)
         void assign(size_type n, const T &x)
         {
+            // ? what does this function do ?
+            // * it assigns n copies of x to the vector
+            // ** example : vector<int> v; (v contains {1, 2, 3, 4, 5}), v.assign(3, 'a') will result in {'a', 'a', 'a'}
+            // ? how does this function work ?
             if (n > max_size())
                 throw std::length_error("length error");
             if (n > _capacity)
@@ -419,7 +460,7 @@ std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
 // resize : // * done
 // swap : // ? quesition : what about swaping allocators ?
 // operator= : // * done
-// assign : 
+// assign :
 // insert :
 // erase : // * done
 // clear : // * done

@@ -6,7 +6,6 @@
 #include <iterator>
 #include <typeinfo>
 
-
 #define GREEN "\e[1;32m"
 #define RED "\e[1;31m"
 #define WHITE "\e[1;37m"
@@ -29,7 +28,7 @@ namespace ft
     public:
         typedef T value_type;
         typedef std::allocator<value_type> allocator_type;
-        typedef T& reference;
+        typedef T &reference;
         typedef const T &const_reference;
         typedef T *pointer;
         typedef const T *const_pointer;
@@ -212,31 +211,21 @@ namespace ft
                 throw std::out_of_range("out of range");
             _size--;
         }
-        iterator insert(iterator pos, const T &x)
+        iterator insert(iterator position, const value_type& val)
         {
-            // insert reserves memory for n elements and inserts x at position n
-            // if n is greater than the size of the vector, the new elements are default constructed
-            // if n is less than the size of the vector, the new elements are copy constructed from the existing elements
-            // if n is equal to the size of the vector, the new elements are copy constructed from x
-            std::cout << "hello" << std::endl;
-            std::cout << "pos&: " << pos << std::endl;
-            std::cout << "pos: " << *pos << std::endl;
-            std::cout << "arr: " << _arr << std::endl;
-            std::cout << "*arr: " << *_arr << std::endl;
+            std::cout << "position=>" << *position << std::endl;
+            difference_type  pos = position - _arr;
+            // we save pos - _arr in pos to avoid the problem of the iterator being invalidated :
+            // when we insert an element in the middle of the vector, the iterator is invalidated 
+            // because the vector is resized and the iterator is pointing to the new location of the element
+            std::cout << "pose=>" << pos << std::endl;
             if (_size == _capacity)
                 reserve(_capacity + 1);
-            // for (size_type i = pos - _arr; i < _size - 1; ++i)
-            size_type t = std::distance(begin(), pos);
-            std::cout << "difference : " << t << std::endl;
-            for (difference_type i = _size; i > pos - begin(); --i)
-            {
-                if (i - 1 < 0)
-                    return 0;
+            for (difference_type i = _size; i > pos; --i)
                 _arr[i] = _arr[i - 1];
-            }
-            _arr[pos - _arr] = x;
+            _arr[pos] = val;
             _size++;
-            return pos;
+            return iterator(&_arr[pos]);
         }
 
         // void insert checks if size is bigger than capacity and if so, it calls reserve
@@ -257,24 +246,24 @@ namespace ft
             // std::cout << "this-size: " << this->_size << std::endl;
             // std::cout << "this-capacity: " << this->_capacity << std::endl;
 
-            for (size_type i = _size; i > pos - _arr ; --i)
+            for (size_type i = _size; i > pos - _arr; --i)
             {
                 // pos is a pointer to the element we want to insert
                 // (pos - _arr) is the index of the element we want to insert
-                std::cout << "pos: " << pos  << std::endl;
-                std::cout << "arr: " << _arr  << std::endl;
-                std::cout << "pos - arr: " << pos - _arr  << std::endl;
+                std::cout << "pos: " << pos << std::endl;
+                std::cout << "arr: " << _arr << std::endl;
+                std::cout << "pos - arr: " << pos - _arr << std::endl;
                 // std::cout << "this-size: " << this->_size << std::endl;
                 // std::cout << "this-capacity: " << this->_capacity << std::endl;
                 // std::cout << "i: " << i << std::endl;
-                // i - 1 will fail in case of i = 0 , so we will handle it by 
+                // i - 1 will fail in case of i = 0 , so we will handle it by
                 if (i - 1 < 0)
                 {
                     _arr[i] = _arr[0];
                     return;
                 }
-                    // exit(1);
-                
+                // exit(1);
+
                 _arr[i] = _arr[i - 1];
             }
             // std::cout << "ina lillah" << std::endl;
@@ -473,7 +462,7 @@ std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
 // TODO: non member functions
 // * 1 :
 // template <class T, class Alloc>
-// bool operator== (const vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs);
+// bool operator== (const vector<T,Alloc>& lhs, const ft::vector<T,Alloc>& rhs)
 // * 2 :
 // template <class T, class Alloc>
 //   bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs);

@@ -109,7 +109,7 @@ namespace ft
         }
         iterator operator+(const iterator &obj)
         {
-            std::cout << YELLOW << "operator + (it)" << DEFAULT << std::endl;
+            // std::cout << YELLOW << "operator + (it)" << DEFAULT << std::endl;
             iterator tmp = *this;
             tmp._ptr += obj._ptr;
             return tmp;
@@ -120,13 +120,15 @@ namespace ft
         {
             // * Subtraction gives you the distance - the number of steps from one point to the other
             // std::cout << YELLOW << "operator - (it)" << DEFAULT << std::endl; 
-            std::cout << "they called me " << std::endl;
-            std::cout << "obj ptr : " << obj._ptr << std::endl;
+            std::cout << "they called me OP" << std::endl;
+            std::cout << "obj ptr : " << *obj._ptr << std::endl;
             std::cout << "this ptr : " << *_ptr << std::endl;
-            // std::cout << "difference : " << this->_ptr - obj._ptr << std::endl;
+            std::cout << "test : " << this->_ptr - obj._ptr << std::endl;
             // std::distance
+
             return (this->_ptr - obj._ptr);
         }
+        
         // difference_type operator-(const iterator &obj) const
         // {
         //     return (this->_ptr - obj._ptr);

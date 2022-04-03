@@ -213,18 +213,19 @@ namespace ft
         }
         iterator insert(iterator position, const value_type& val)
         {
-            std::cout << "position=>" << *position << std::endl;
+            // std::cout << "position=>" << *position << std::endl;
             difference_type  pos = position - _arr;
-            // we save pos - _arr in pos to avoid the problem of the iterator being invalidated :
-            // when we insert an element in the middle of the vector, the iterator is invalidated 
-            // because the vector is resized and the iterator is pointing to the new location of the element
-            std::cout << "pose=>" << pos << std::endl;
+            // std::cout << "pose=>" << pos << std::endl;
             if (_size == _capacity)
                 reserve(_capacity + 1);
             for (difference_type i = _size; i > pos; --i)
                 _arr[i] = _arr[i - 1];
             _arr[pos] = val;
             _size++;
+            // we're calling iterator constructor: cuz we need to create a new iterator to the element that was inserted.because 
+            // the previous one is invalidated
+            // iterator invalidation:  the vector is resized and the iterator is pointing to the new location of the element
+            // we return an iterator to the element that was inserted.
             return iterator(&_arr[pos]);
         }
 
@@ -232,43 +233,15 @@ namespace ft
         // then it inserts x at position n and moves all the elements after n to the right
         // if n is greater than the size of the vector, the new elements are default constructed
         void insert(iterator pos, size_type n, const T &x)
-        {
-            // ? what does this function do ?
-            // * it inserts n copies of x at position pos
-            // ** example : insert(begin(), 3, 'a') will insert 3 'a' at the beginning of the vector, vector will contain {'a', 'a', 'a'}
-            // ? how does it work ?
-            // * it calls reserve to allocate memory for n elements
-            //
-            //
-            std::cout << "ba9i ma segvaultit" << std::endl;
+        {   
+            difference_type diff = pos - _arr;
+            size_type count = pos + 1;
             if (_size + n > _capacity)
                 reserve(_capacity + n);
-            // std::cout << "this-size: " << this->_size << std::endl;
-            // std::cout << "this-capacity: " << this->_capacity << std::endl;
-
-            for (size_type i = _size; i > pos - _arr; --i)
-            {
-                // pos is a pointer to the element we want to insert
-                // (pos - _arr) is the index of the element we want to insert
-                std::cout << "pos: " << pos << std::endl;
-                std::cout << "arr: " << _arr << std::endl;
-                std::cout << "pos - arr: " << pos - _arr << std::endl;
-                // std::cout << "this-size: " << this->_size << std::endl;
-                // std::cout << "this-capacity: " << this->_capacity << std::endl;
-                // std::cout << "i: " << i << std::endl;
-                // i - 1 will fail in case of i = 0 , so we will handle it by
-                if (i - 1 < 0)
-                {
-                    _arr[i] = _arr[0];
-                    return;
-                }
-                // exit(1);
-
-                _arr[i] = _arr[i - 1];
-            }
-            // std::cout << "ina lillah" << std::endl;
+            for (difference_type i = _size; i > diff; --i)
+                _arr[i] = _arr[i - n];
             for (size_type i = 0; i < n; ++i)
-                _arr[pos - _arr + i] = x;
+                _arr[count] = x;
             _size += n;
         }
         // ! insert with input iterator needs is integral and enable if because of the iterator type, which is not integral

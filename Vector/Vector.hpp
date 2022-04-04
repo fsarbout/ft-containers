@@ -20,6 +20,12 @@
 // * answer
 // ** example
 
+// Note : we can't access end() of vector, it doesn't point to any valid data
+// end() doesn't point to last element, it points to the element behind the last
+// so it gives an undefined behavior
+// v::iterator = v.end() => derreferencing an invalid pointer 
+// in case of empty vector, end() == begin()
+
 namespace ft
 {
     template <typename T>
@@ -79,13 +85,12 @@ namespace ft
         //     _capacity = 0;
         //     reserve(last - first);
         //     for (; first != last; ++first)
-        //         push_back(*first);
+        //         _arr[_size++] = *first;
         // }
 
         // destructor
         ~vector()
         {
-            std::cout << GREEN << "DESTRUCTOR" << DEFAULT << std::endl;
             if (_arr)
                 alloc.deallocate(_arr, _capacity);
         }
@@ -213,9 +218,7 @@ namespace ft
         }
         iterator insert(iterator position, const value_type& val)
         {
-            // std::cout << "position=>" << *position << std::endl;
             difference_type  pos = position - _arr;
-            // std::cout << "pose=>" << pos << std::endl;
             if (_size == _capacity)
                 reserve(_capacity + 1);
             for (difference_type i = _size; i > pos; --i)
@@ -232,18 +235,21 @@ namespace ft
         // void insert checks if size is bigger than capacity and if so, it calls reserve
         // then it inserts x at position n and moves all the elements after n to the right
         // if n is greater than the size of the vector, the new elements are default constructed
-        void insert(iterator pos, size_type n, const T &x)
-        {   
-            difference_type diff = pos - _arr;
-            size_type count = pos + 1;
+        
+         void insert(iterator position, size_type n, const value_type& val)
+        {
+            std::cout << "insert 1" << std::endl;
+            difference_type diff = position - _arr;
             if (_size + n > _capacity)
                 reserve(_capacity + n);
-            for (difference_type i = _size; i > diff; --i)
-                _arr[i] = _arr[i - n];
-            for (size_type i = 0; i < n; ++i)
-                _arr[count] = x;
+            iterator pos = iterator(&_arr[diff]);
+            for (size_type i = diff; i < _size; ++i)
+                _arr[i + n] = _arr[i];
+            for(size_type i = 0; i < n; ++i)
+                _arr[diff + i] = val;
             _size += n;
         }
+
         // ! insert with input iterator needs is integral and enable if because of the iterator type, which is not integral
         // ! if we don't check for is integral we get a compile error
         // ! we check for is integral to avoid the error of the iterator type not being integral as this example shows:
@@ -251,14 +257,16 @@ namespace ft
         // ! v.insert(v.begin(), v.begin(), v.end());
         // ! this is not allowed because the iterator type is not integral and we can't use it in the insert function
 
-        // TODO: need to fix integral, enable if
+        // TODO: need to fix is_integral, enable if
+
         // template <class InputIterator>
         // void insert(iterator position, InputIterator first, InputIterator last)
         // {
+        //     std::cout << "insert 1" << std::endl;
         //     size_type n = last - first;
         //     if (_size + n > _capacity)
         //         reserve(_capacity + n);
-        //     for (size_type i = _size; i > position - _arr; --i)
+        //     for (difference_type i = _size; i > position - _arr; --i)
         //         _arr[i] = _arr[i - 1];
         //     for (size_type i = 0; i < n; ++i)
         //         _arr[position - _arr + i] = *(first + i);
@@ -424,7 +432,7 @@ std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
 // swap : // ? quesition : what about swaping allocators ?
 // operator= : // * done
 // assign :
-// insert :
+// insert :  
 // erase : // * done
 // clear : // * done
 // push_back : // * done

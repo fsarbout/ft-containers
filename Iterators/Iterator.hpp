@@ -31,21 +31,15 @@ namespace ft
     public:
         iterator()
         {
-            // std::cout << BLUE << "iterator default constructor" << DEFAULT << std::endl;
         }
         iterator(pointer ptr) : _ptr(ptr)
         {
-            // std::cout << YELLOW << "iterator param constructor" << DEFAULT << std::endl;
         }
         ~iterator()
         {
-            // std::cout << YELLOW << "destructor" << DEFAULT << std::endl;
         }
-        // * methods todo
-        // TODO : copy constructor
         iterator(const iterator &copy)
         {
-            // std::cout << YELLOW << "iterator copy constructor" << DEFAULT << std::endl;
             // * return (*this) will return the current class object
             // * return (this ) will return the current class  address
             *this = copy;
@@ -53,32 +47,27 @@ namespace ft
         // ? TF I need to return by reference ?!!!! both working fine
         iterator &operator=(const iterator &obj)
         {
-            // std::cout << YELLOW << "iterator assignation operator  (it)" << DEFAULT << std::endl;
             this->_ptr = obj._ptr;
             return *this;
         }
         iterator &operator++()
         {
-            // std::cout << YELLOW << "++ operator (it)" << DEFAULT << std::endl;
             _ptr++;
             return *this;
         }
         iterator operator++(int)
         {
-            // std::cout << YELLOW << "operator ++ (it)" << DEFAULT << std::endl;
             iterator tmp = *this;
             ++*this;
             return tmp;
         }
         iterator &operator--()
         {
-            // std::cout << YELLOW << "-- operator (it)" << DEFAULT << std::endl;
             _ptr--;
             return *this;
         }
         iterator operator--(int)
         {
-            // std::cout << YELLOW << "operator -- (it)" << DEFAULT << std::endl;
             iterator tmp = *this;
             --*this;
             return tmp;
@@ -119,20 +108,9 @@ namespace ft
         difference_type operator-(const iterator &obj)
         {
             // * Subtraction gives you the distance - the number of steps from one point to the other
-            // std::cout << YELLOW << "operator - (it)" << DEFAULT << std::endl; 
-            std::cout << "they called me OP" << std::endl;
-            std::cout << "obj ptr : " << *obj._ptr << std::endl;
-            std::cout << "this ptr : " << *_ptr << std::endl;
-            std::cout << "test : " << this->_ptr - obj._ptr << std::endl;
-            // std::distance
-
             return (this->_ptr - obj._ptr);
         }
-        
-        // difference_type operator-(const iterator &obj) const
-        // {
-        //     return (this->_ptr - obj._ptr);
-        // }
+    
         T &operator*()
         {
             // returns the value of the current object
@@ -147,14 +125,12 @@ namespace ft
 
         iterator operator+(int n)
         {
-            // std::cout << "you" << std::endl;
             iterator tmp;
             tmp._ptr = _ptr + n;
             return tmp;
         }
         iterator operator-(int n)
         {
-            // std::cout << "you" << std::endl;
             iterator tmp;
             tmp._ptr = _ptr - n;
             return tmp;
@@ -168,7 +144,6 @@ namespace ft
             _ptr += n;
             return *this;
         }
-        // operator -=
         iterator &operator-=(int n)
         {
             _ptr -= n;
@@ -187,7 +162,6 @@ namespace ft
 template <typename T>
 std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
 {
-    // std::cout << YELLOW << "OPERATOR <<" << DEFAULT << std::endl;
     out << &it;
     return out;
 }
@@ -195,7 +169,6 @@ std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
 template <typename T>
 ft::iterator<T> operator+(int n, ft::iterator<T> it)
 {
-    std::cout << YELLOW << "OPERATOR +" << DEFAULT << std::endl;
     ft::iterator<T> tmp;
     tmp.setPtr(it.getPtr() + n);
     return tmp;
@@ -204,7 +177,6 @@ ft::iterator<T> operator+(int n, ft::iterator<T> it)
 template <typename T>
 ft::iterator<T> operator-(int n, ft::iterator<T> it)
 {
-    std::cout << YELLOW << "OPERATOR -" << DEFAULT << std::endl;
     ft::iterator<T> tmp;
     tmp.setPtr(it.getPtr() - n);
     return tmp;

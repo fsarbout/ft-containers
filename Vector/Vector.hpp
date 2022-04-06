@@ -1,10 +1,11 @@
-#ifndef VECTOR_HPP
-#define VECTOR_HPP
+#pragma once
 
 #include <iostream>
 #include <cstddef>
 #include <iterator>
 #include <typeinfo>
+#include "../utils/is_integral.hpp"
+#include "../utils/enable_if.hpp"
 
 #define GREEN "\e[1;32m"
 #define RED "\e[1;31m"
@@ -34,9 +35,9 @@ namespace ft
     public:
         typedef T value_type;
         typedef std::allocator<value_type> allocator_type;
-        typedef T &reference;
+        typedef T& reference;
         typedef const T &const_reference;
-        typedef T *pointer;
+        typedef T* pointer;
         typedef const T *const_pointer;
         typedef ft::iterator<value_type> iterator;
         typedef const ft::iterator<const value_type> const_iterator;
@@ -76,17 +77,19 @@ namespace ft
         vector(const vector &x) { *this = x; }
 
         // ! IDK
-        // template <class InputIterator>
-        // vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type())
-        // {
-        //     (void)alloc;
-        //     _arr = nullptr;
-        //     _size = 0;
-        //     _capacity = 0;
-        //     reserve(last - first);
-        //     for (; first != last; ++first)
-        //         _arr[_size++] = *first;
-        // }
+        template <class InputIterator>
+        vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
+        typename ft::enable_if< !ft::is_integral<InputIterator>::value>::type  *f = NULL)
+        {
+            (void)f;
+            (void)alloc;
+            _arr = nullptr;
+            _size = 0;
+            _capacity = 0;
+            reserve(last - first);
+            for (; first != last; ++first)
+                _arr[_size++] = *first;
+        }
 
         // destructor
         ~vector()
@@ -218,6 +221,7 @@ namespace ft
         }
         iterator insert(iterator position, const value_type& val)
         {
+            std::cout << "insert 0" << std::endl;
             difference_type  pos = position - _arr;
             if (_size == _capacity)
                 reserve(_capacity + 1);
@@ -240,14 +244,16 @@ namespace ft
         {
             std::cout << "insert 1" << std::endl;
             difference_type diff = position - _arr;
+            (void)diff;
+            (void)val;
             if (_size + n > _capacity)
                 reserve(_capacity + n);
-            iterator pos = iterator(&_arr[diff]);
-            for (size_type i = diff; i < _size; ++i)
-                _arr[i + n] = _arr[i];
-            for(size_type i = 0; i < n; ++i)
-                _arr[diff + i] = val;
-            _size += n;
+            // iterator pos = iterator(&_arr[diff]);
+            // for (size_type i = diff; i < _size; ++i)
+            //     _arr[i + n] = _arr[i];
+            // for(size_type i = 0; i < n; ++i)
+            //     _arr[diff + i] = val;
+            // _size += n;
         }
 
         // ! insert with input iterator needs is integral and enable if because of the iterator type, which is not integral
@@ -258,20 +264,27 @@ namespace ft
         // ! this is not allowed because the iterator type is not integral and we can't use it in the insert function
 
         // TODO: need to fix is_integral, enable if
+        template <class InputIterator>
+        void insert(iterator position, InputIterator first, InputIterator last,
+        typename ft::enable_if< !ft::is_integral<InputIterator>::value>::type  *f = NULL)
+        {
+            (void)f;
+            std::cout << "insert 2" << std::endl;
+            size_type n = last - first;
+            difference_type diff = position - _arr;
+            if (_size + n > _capacity)
+                reserve(_capacity + n);
+            for (difference_type i = _size; i > diff; --i)
+                _arr[i] = _arr[i - 1];
+            for (size_type i = 0; i < n; ++i)
+            {
+                _arr[diff + i] = *first;
+                ++first;
+            }
+            _size += n;
+        }
 
-        // template <class InputIterator>
-        // void insert(iterator position, InputIterator first, InputIterator last)
-        // {
-        //     std::cout << "insert 1" << std::endl;
-        //     size_type n = last - first;
-        //     if (_size + n > _capacity)
-        //         reserve(_capacity + n);
-        //     for (difference_type i = _size; i > position - _arr; --i)
-        //         _arr[i] = _arr[i - 1];
-        //     for (size_type i = 0; i < n; ++i)
-        //         _arr[position - _arr + i] = *(first + i);
-        //     _size += n;
-        // }
+        
 
         // erase removes the element at position n and moves all the elements after n to the left
         // example : vector<int> v;
@@ -471,5 +484,3 @@ std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
 
 // Returning a value also forces unnecessary trips through the object's copy constructor, costing you in performance.?
 //
-
-#endif

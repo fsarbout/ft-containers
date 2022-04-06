@@ -9,9 +9,9 @@
 // #define PURPLE "\033[1;35m"
 
 #include <iostream>
-#include <cstddef>
-#include <typeinfo>
-#include <iterator>
+// #include <cstddef>
+// #include <typeinfo>
+// #include <iterator>
 
 namespace ft
 {

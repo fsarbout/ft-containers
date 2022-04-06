@@ -17,8 +17,6 @@ int main()
     std::vector<int> vv;
     std::cout << vv.size();
 
-
-
     std::vector<int>::iterator it = vv.begin();
     std::cout << "size" << vv.size() << std::endl;
     std::cout << "capacity" << vv.capacity() << std::endl;
@@ -49,8 +47,18 @@ int main()
     std::cout << std::endl;
 
     ft::vector<int> mvv;
+    ft::vector<int>::iterator mit = mvv.begin();
+    ft::vector<int>::iterator mite = mvv.end();
     // mvv.insert(mvv.begin(), mv.begin(), mv.end());
-    mvv.insert(mvv.begin() + 1, 5, 23);
+    // ! insert 1
+    // mvv.insert(mvv.begin() + 1, 5, 23);
+
+    for (size_t i = 0; i < mvv.size(); i++)
+        std::cout << mvv[i] << " ";
+    std::cout << std::endl;
+    // ! insert 2
+    mvv.insert(mit, mv.begin(), mv.end());
+
 
     std::cout << " size " << mvv.size() << std::endl;
     std::cout << " capacity " << mvv.capacity() << std::endl;

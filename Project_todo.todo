@@ -1,0 +1,19 @@
+• vector : almost "DONE"
+• map : 
+• stack : 
+• iterator_traits : "DONE"
+• reverse_iterator : "DONE"
+• enable_if : "DONE"
+• is_integral : "DONE"
+• equal : "DONE"
+• std::pair : 
+• std::make_pair :
+
+
+problems in theory: 
+• pair: 
+• make_pair:
+• equal:
+• is_integral:
+• enable_if: 
+• SFINAE : 

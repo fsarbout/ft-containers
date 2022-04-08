@@ -73,5 +73,4 @@ namespace ft
     {
         enum { value = true };
     };
-
 }

@@ -1,4 +1,4 @@
-# pragma once
+#pragma once
 
 #include <iostream>
 #include <cstddef>
@@ -6,15 +6,16 @@
 #include <typeinfo>
 #include "../utils/is_integral.hpp"
 #include "../utils/enable_if.hpp"
+#include "../iterators/Iterator.hpp"
 
-#define GREEN "\e[1;32m"
-#define RED "\e[1;31m"
-#define WHITE "\e[1;37m"
-#define DEFAULT "\e[0;37m"
-#define YELLOW "\e[1;33m"
-#define BLUE "\e[1;34m"
-#define PURPLE "\e[1;35m"
-#define COLOR "\e[1;36m"
+// #define GREEN "\e[1;32m"
+// #define RED "\e[1;31m"
+// #define WHITE "\e[1;37m"
+// #define DEFAULT "\e[0;37m"
+// #define YELLOW "\e[1;33m"
+// #define BLUE "\e[1;34m"
+// #define PURPLE "\e[1;35m"
+// #define COLOR "\e[1;36m"
 
 // note : install "better comments" to highlight comments"
 // ? question
@@ -77,6 +78,7 @@ namespace ft
         vector(const vector &x) { *this = x; }
 
         // ! IDK
+
         template <class InputIterator>
         vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
                typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL)
@@ -397,7 +399,7 @@ namespace ft
             if (n > _size)
                 for (size_type i = _size; i < n; ++i)
                     _arr[i] = T();
-            std::cout << YELLOW << "resize called ( _arr[i] = T()) :  ^ " << DEFAULT << std::endl;
+            // std::cout << YELLOW << "resize called ( _arr[i] = T()) :  ^ " << DEFAULT << std::endl;
             _size = n;
         }
     };

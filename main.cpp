@@ -10,7 +10,7 @@ int main()
     /**************************************************************************/
     /*                           ! std::vector test                           */
     /**************************************************************************/
-    std::cout << PURPLE << "<std> tests" << DEFAULT << std::endl;
+    // std::cout << PURPLE << "<std> tests" << DEFAULT << std::endl;
 
     std::vector<int> v = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     std::vector<int> vv;
@@ -45,7 +45,7 @@ int main()
     /**************************************************************************/
     /*                           ! ft::vector test                            */
     /**************************************************************************/
-    std::cout << PURPLE << "my tests <ft>" << DEFAULT << std::endl;
+    // std::cout << PURPLE << "my tests <ft>" << DEFAULT << std::endl;
 
     ft::vector<int> mv(20, 30);
 

@@ -1,19 +1,12 @@
-#include <iostream>
+// iterator_traits example
+#include <iostream>     // std::cout
+#include "iterators/Iterator.hpp"     // ft::iterator_traits
+#include <typeinfo>     // typeid
+// #include <iterator>     // ft::iterator_traits
 
-int negate(int i)
-{
-    std::cout << "negate" << std::endl;
-    return -i;
-}
-
-template <typename T>
-typename T::value_type negate(const T &t)
-{
-    std::cout << "template negate" << std::endl;
-    return -T(t);
-}
-
-int main()
-{
-    std::cout << negate(42) << std::endl;
+int main() {
+  typedef ft::iterator_traits<int*> traits;
+  if (typeid(traits::iterator_category)==typeid(ft::random_access_iterator_tag))
+    std::cout << "int* is a random-access iterator";
+  return 0;
 }

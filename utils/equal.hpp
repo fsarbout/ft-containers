@@ -11,7 +11,6 @@ namespace ft
                 return false;
         return true;
     }
-    // equal for ranges (no need to check if the ranges are the same size)
     // ? how does it work?
     // * it returns true if the ranges are the same size and the elements are the same
 

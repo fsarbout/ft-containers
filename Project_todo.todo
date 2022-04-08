@@ -14,6 +14,7 @@ problems in theory:
 • pair: 
 • make_pair:
 • equal:
-• is_integral:
-• enable_if: 
-• SFINAE : 
+• is_integral: 
+• enable_if: done
+• SFINAE : done
+• tag dispatching: https://www.cppstories.com/2016/02/notes-on-c-sfinae/

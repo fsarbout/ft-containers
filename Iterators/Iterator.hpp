@@ -23,15 +23,15 @@ namespace ft
     public:
         typedef T value_type;
         typedef std::ptrdiff_t difference_type;
-        typedef T* pointer;
-        typedef T& reference;
+        typedef T *pointer;
+        typedef T &reference;
         typedef std::random_access_iterator_tag iterator_category;
         // std::ptrdiff_t is the signed integer type of the result of subtracting two pointers.
     private:
         pointer _ptr;
 
     public:
-        iterator()
+        iterator() : _ptr(NULL)
         {
         }
         iterator(pointer ptr) : _ptr(ptr)
@@ -47,7 +47,7 @@ namespace ft
             *this = copy;
         }
         // ? TF I need to return by reference ?!!!! both working fine
-        iterator &operator=(const iterator &obj)
+        iterator &operator=(const iterator &obj) const
         {
             this->_ptr = obj._ptr;
             return *this;
@@ -60,7 +60,7 @@ namespace ft
         iterator operator++(int)
         {
             iterator tmp = *this;
-            ++*this;
+            _ptr++;
             return tmp;
         }
         iterator &operator--()
@@ -71,7 +71,7 @@ namespace ft
         iterator operator--(int)
         {
             iterator tmp = *this;
-            --*this;
+            _ptr--;
             return tmp;
         }
         bool operator==(const iterator &obj)
@@ -98,7 +98,7 @@ namespace ft
         {
             return (this->_ptr >= obj._ptr);
         }
-        iterator operator+(const iterator &obj)
+        iterator operator+(const iterator &obj) const
         {
             // std::cout << YELLOW << "operator + (it)" << DEFAULT << std::endl;
             iterator tmp = *this;
@@ -106,82 +106,81 @@ namespace ft
             return tmp;
         }
         // operator - returns distance between two iterators
-        // we get the value at position 
+        // we get the value at position
         difference_type operator-(const iterator &obj)
         {
             // * Subtraction gives you the distance - the number of steps from one point to the other
             return (this->_ptr - obj._ptr);
         }
-    
-        T &operator*()
+
+        reference operator*()
         {
             // returns the value of the current object
-            return *_ptr;
+            return *this->_ptr;
         }
-        T *operator->()
+        pointer operator->()  
         {
             //  returns the address of the object
             //  should return a reference if I want to use for modification
             return &_ptr;
         }
 
-        iterator operator+(int n)
+        iterator operator+(difference_type n) const
         {
             iterator tmp;
             tmp._ptr = _ptr + n;
             return tmp;
         }
-        iterator operator-(int n)
+        iterator operator-(difference_type n) 
         {
             iterator tmp;
             tmp._ptr = _ptr - n;
             return tmp;
         }
-        T *&operator[](int n)
+        reference operator[](int n) 
         {
             return _ptr[n];
         }
-        iterator &operator+=(int n)
+        iterator &operator+=(int n) 
         {
             _ptr += n;
             return *this;
         }
-        iterator &operator-=(int n)
+        iterator &operator-=(int n) 
         {
             _ptr -= n;
             return *this;
         }
-        operator iterator<const value_type>() const
-        { 
+        operator iterator<const value_type>()
+        {
             return iterator<const value_type>(_ptr);
         }
     };
 
     // input iterator
+    template <typename T>
+    std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
+    {
+        out << &it;
+        return out;
+    }
 
-}
+    template <typename T>
+    ft::iterator<T> operator+(int n, ft::iterator<T> it)
+    {
+        ft::iterator<T> tmp;
+        tmp.setPtr(it.getPtr() + n);
+        return tmp;
+    }
 
-template <typename T>
-std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
-{
-    out << &it;
-    return out;
-}
+    template <typename T>
+    ft::iterator<T> operator-(int n, ft::iterator<T> it)
+    {
+        ft::iterator<T> tmp;
+        tmp.setPtr(it.getPtr() - n);
+        return tmp;
+    }
 
-template <typename T>
-ft::iterator<T> operator+(int n, ft::iterator<T> it)
-{
-    ft::iterator<T> tmp;
-    tmp.setPtr(it.getPtr() + n);
-    return tmp;
-}
-
-template <typename T>
-ft::iterator<T> operator-(int n, ft::iterator<T> it)
-{
-    ft::iterator<T> tmp;
-    tmp.setPtr(it.getPtr() - n);
-    return tmp;
 }
 
 #endif

@@ -389,7 +389,7 @@ namespace ft
         }
 
         // resize
-        void resize(size_type n)
+        void resize (size_type n, value_type val = value_type())
         {
             // ! if n is greater than the current size, we fill the new elements with the default value
             // ! example : vector<int> v; v.resize(10) will call v.reserve(10) and fill the new elements with the default value which is 0

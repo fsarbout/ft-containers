@@ -1,12 +1,15 @@
 #pragma once
 
 #include <iostream>
+#include <vector>
 #include <cstddef>
 #include <iterator>
 #include <typeinfo>
 #include "../utils/is_integral.hpp"
 #include "../utils/enable_if.hpp"
 #include "../iterators/Iterator.hpp"
+#include "../iterators/reverse_iterator.hpp"
+#include "../iterators/Iterator_traits.hpp"
 
 // #define GREEN "\e[1;32m"
 // #define RED "\e[1;31m"
@@ -41,7 +44,7 @@ namespace ft
         typedef T *pointer;
         typedef const T *const_pointer;
         typedef ft::iterator<value_type> iterator;
-        typedef const ft::iterator<const value_type> const_iterator;
+        typedef ft::iterator<const value_type> const_iterator;
         typedef size_t size_type;
         typedef std::ptrdiff_t difference_type;
         typedef std::reverse_iterator<iterator> reverse_iterator;
@@ -61,11 +64,14 @@ namespace ft
             // std::cout << YELLOW << "VECTOR DEFAULT CONSTRUCTOR" << DEFAULT << std::endl;
         }
 
-        // ! needs is integral and enable if
+        // explicit vector(size_type n, const value_type& val = value_type(), const allocator_type &alloc = allocator_type());
+
+        // ! fill constructor
         explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
         {
             // constructs container with n elements, each initialized with val
             // like : vector<int> v(10, 0); >> will create a vector of 10 ints with all elements initialized to 0
+            // std::cout << "VECTOR CONSTRUCTOR" << std::endl;
             (void)alloc;
             _arr = nullptr;
             _size = 0;
@@ -391,6 +397,7 @@ namespace ft
         // resize
         void resize (size_type n, value_type val = value_type())
         {
+            (void)val;
             // ! if n is greater than the current size, we fill the new elements with the default value
             // ! example : vector<int> v; v.resize(10) will call v.reserve(10) and fill the new elements with the default value which is 0
             // ! the size of vector is basically the filled capacity of the vector, so resize needs to fill the new elements with the default value

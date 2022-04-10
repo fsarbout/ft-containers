@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-#include "Iterator.hpp"
+#include "Iterator_traits.hpp"
 // #include <cstddef>
 // #include <typeinfo>
 // #include <iterator>
@@ -46,21 +46,25 @@ namespace ft
             // * return (this ) will return the current class  address
             *this = copy;
         }
+        pointer base() const
+        {
+            return _ptr;
+        }
         // ? TF I need to return by reference ?!!!! both working fine
-        iterator &operator=(const iterator &obj) const
+        iterator &operator=(const iterator &obj)
         {
             this->_ptr = obj._ptr;
             return *this;
         }
         iterator &operator++()
         {
-            _ptr++;
+            this->_ptr++;
             return *this;
         }
         iterator operator++(int)
         {
-            iterator tmp = *this;
-            _ptr++;
+            iterator tmp(*this);
+            this->_ptr++;
             return tmp;
         }
         iterator &operator--()
@@ -74,27 +78,27 @@ namespace ft
             _ptr--;
             return tmp;
         }
-        bool operator==(const iterator &obj)
+        bool operator==(const iterator &obj) const
         {
             return (this->_ptr == obj._ptr);
         }
-        bool operator!=(const iterator &obj)
+        bool operator!=(const iterator &obj) const
         {
             return (this->_ptr != obj._ptr);
         }
-        bool operator<=(const iterator &obj)
+        bool operator<=(const iterator &obj) const
         {
             return (this->_ptr <= obj._ptr);
         }
-        bool operator<(const iterator &obj)
+        bool operator<(const iterator &obj) const
         {
             return (this->_ptr < obj._ptr);
         }
-        bool operator>(const iterator &obj)
+        bool operator>(const iterator &obj) const
         {
             return (this->_ptr > obj._ptr);
         }
-        bool operator>=(const iterator &obj)
+        bool operator>=(const iterator &obj) const
         {
             return (this->_ptr >= obj._ptr);
         }
@@ -107,48 +111,49 @@ namespace ft
         }
         // operator - returns distance between two iterators
         // we get the value at position
-        difference_type operator-(const iterator &obj)
+        difference_type operator-(const iterator &obj) const
         {
             // * Subtraction gives you the distance - the number of steps from one point to the other
             return (this->_ptr - obj._ptr);
         }
 
-        reference operator*()
+
+        reference operator*() const
         {
             // returns the value of the current object
             return *this->_ptr;
         }
-        pointer operator->()  
+        pointer operator->()
         {
             //  returns the address of the object
             //  should return a reference if I want to use for modification
-            return &_ptr;
+            return this->_ptr;
         }
 
         iterator operator+(difference_type n) const
         {
             iterator tmp;
-            tmp._ptr = _ptr + n;
+            tmp._ptr = this->_ptr + n;
             return tmp;
         }
-        iterator operator-(difference_type n) 
+        iterator operator-(difference_type n) const
         {
             iterator tmp;
-            tmp._ptr = _ptr - n;
+            tmp._ptr = this->_ptr - n;
             return tmp;
         }
-        reference operator[](int n) 
+        reference operator[](int n) const
         {
-            return _ptr[n];
+            return this->_ptr[n];
         }
-        iterator &operator+=(int n) 
+        iterator &operator+=(int n)
         {
-            _ptr += n;
+            this->_ptr += n;
             return *this;
         }
-        iterator &operator-=(int n) 
+        iterator &operator-=(int n)
         {
-            _ptr -= n;
+            this->_ptr -= n;
             return *this;
         }
         operator iterator<const value_type>()
@@ -158,27 +163,26 @@ namespace ft
     };
 
     // input iterator
+    // template <typename T>
+    // std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
+    // {
+    //     out << &it;
+    //     return out;
+    // }
+
     template <typename T>
-    std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
+    iterator<T> operator+(std::ptrdiff_t n, ft::iterator<T> it)
     {
-        out << &it;
-        return out;
+        return it + n;
     }
 
     template <typename T>
-    ft::iterator<T> operator+(int n, ft::iterator<T> it)
+    iterator<T> operator-(std::ptrdiff_t n, ft::iterator<T> it)
     {
-        ft::iterator<T> tmp;
-        tmp.setPtr(it.getPtr() + n);
-        return tmp;
-    }
-
-    template <typename T>
-    ft::iterator<T> operator-(int n, ft::iterator<T> it)
-    {
-        ft::iterator<T> tmp;
-        tmp.setPtr(it.getPtr() - n);
-        return tmp;
+        // ft::iterator<T> tmp;
+        // tmp.setPtr(it.getPtr() - n);
+        // return tmp;
+        return it - n;
     }
 
 }

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <iostream>
+#include "utils/equal.hpp"
 #include <sys/time.h>
 #if NS
 #define NAMESPACE "FT  : "
@@ -120,7 +121,7 @@ int main(void)
 }
 
 
-	std::cout << ft_vect_int.max_size() << std::endl;
+	std::cout << "max size: " << ft_vect_int.max_size() << std::endl;
 
 	ft::vector<int> ft_vect_int2; 
 	for(int i = 0; i < 100; i += 20)

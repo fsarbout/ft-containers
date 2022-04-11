@@ -1,0 +1,26 @@
+# what did I did in every iterator method ?
+# why do we need to define the typedef ...?
+# what is iterator traits ?
+# what is iterator category ?
+# what is iterator category tag ?
+# what is reverse iterator ?
+# returning this vs *this vs this.ptr ...
+# why do we need const_iterator and iterator ?
+# why do we need const ??
+# what is std::pair , std::make_pair ?
+# what is equal ?
+# what is lexicographical_compare ?
+# when do we need const ?
+# what is typedef ? typename ? template templaet ? type template ?...
+# what is enum ?
+# what did I did in every vector method and what is the behavior of every single one?
+# how could that we are using random iterator and defining vector constructor with a type of InputIterator ? 
+# what is explicit ?
+# why do we declare template fucntions inside template class ?
+# what is template template parameter ?
+# <>::<> syntax ?
+# allocator methods and how are they working ?
+# destroy ?
+# the fucking address and references ???!!!
+# test with debugger and check values .
+# pragme once &&  pre processing 

@@ -8,9 +8,9 @@
 #include <memory>
 #include "../utils/is_integral.hpp"
 #include "../utils/enable_if.hpp"
-#include "../iterators/Iterator.hpp"
+#include "../iterators/iterator.hpp"
 #include "../iterators/reverse_iterator.hpp"
-#include "../iterators/Iterator_traits.hpp"
+#include "../iterators/iterator_traits.hpp"
 
 // note : install "better comments" to highlight comments"
 // ? question

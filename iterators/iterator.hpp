@@ -1,5 +1,4 @@
-#ifndef ITERATOR_HPP
-#define ITERATOR_HPP
+# pragma once
 
 // #define RED "\e[1;31m"
 // #define WHITE "\e[1;37m"
@@ -10,7 +9,7 @@
 
 #include <iostream>
 
-#include "Iterator_traits.hpp"
+#include "iterator_traits.hpp"
 // #include <cstddef>
 // #include <typeinfo>
 // #include <iterator>
@@ -167,7 +166,6 @@ namespace ft
     }
 
 }
-#endif
 
 // ! links
 // ! https://www.javatpoint.com/cpp-iterators

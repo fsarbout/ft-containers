@@ -5,20 +5,12 @@
 #include <cstddef>
 #include <iterator>
 #include <typeinfo>
+#include <memory>
 #include "../utils/is_integral.hpp"
 #include "../utils/enable_if.hpp"
 #include "../iterators/Iterator.hpp"
 #include "../iterators/reverse_iterator.hpp"
 #include "../iterators/Iterator_traits.hpp"
-
-// #define GREEN "\e[1;32m"
-// #define RED "\e[1;31m"
-// #define WHITE "\e[1;37m"
-// #define DEFAULT "\e[0;37m"
-// #define YELLOW "\e[1;33m"
-// #define BLUE "\e[1;34m"
-// #define PURPLE "\e[1;35m"
-// #define COLOR "\e[1;36m"
 
 // note : install "better comments" to highlight comments"
 // ? question
@@ -58,32 +50,27 @@ namespace ft
 
     public:
         //  ! default constructor
-        explicit vector(const allocator_type &alloc = allocator_type()) : alloc(alloc), _arr(nullptr), _size(0), _capacity(0)
-        {
-            //  constructs empty container with no elements
-            // std::cout << YELLOW << "VECTOR DEFAULT CONSTRUCTOR" << DEFAULT << std::endl;
-        }
-
-        // explicit vector(size_type n, const value_type& val = value_type(), const allocator_type &alloc = allocator_type());
+        explicit vector(const allocator_type &alloc = allocator_type()) : alloc(alloc), _arr(NULL), _size(0), _capacity(0) {}
 
         // ! fill constructor
-        explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type())
+        explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : alloc(alloc), _arr(NULL), _size(0), _capacity(0)
         {
             // constructs container with n elements, each initialized with val
             // like : vector<int> v(10, 0); >> will create a vector of 10 ints with all elements initialized to 0
             // std::cout << "VECTOR CONSTRUCTOR" << std::endl;
-            (void)alloc;
-            _arr = nullptr;
-            _size = 0;
-            _capacity = 0;
+
             reserve(n);
             for (size_type i = 0; i < n; ++i)
                 _arr[i] = val;
             _size = n;
         }
-        vector(const vector &x) { *this = x; }
 
-        // ! IDK
+        vector(const vector &x)
+        {
+            *this = x;
+        }
+
+        // ! range constructor
 
         template <class InputIterator>
         vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
@@ -102,12 +89,19 @@ namespace ft
         // destructor
         ~vector()
         {
-            if (_arr)
+            // if (_arr)
+            // {
+                for (size_type i = 0; i < _size; i++)
+                {
+                    alloc.destroy(&_arr[i]);
+                }
                 alloc.deallocate(_arr, _capacity);
+            // }
         }
 
         vector &operator=(const vector &x)
         {
+            // std::cout << "VECTOR ASSIGNMENT" << std::endl;
             if (this != &x)
             {
                 _size = x._size;
@@ -208,18 +202,20 @@ namespace ft
                 alloc.deallocate(_arr, _capacity);
                 _arr = tmp;
                 _capacity = n;
+                alloc.deallocate(tmp, n);
             }
             // this function has no effect on size , and cannot alter its elements
             // we use allocator so in case of failure it will throw an exception : std::bad_alloc
+            // deallocate tmp after use
+            
         }
-        void push_back(const T &x)
+        void push_back(const value_type &val)
         {
-            // if the vector is full, allocate new memory and copy elements
-            // here we used reserve instead of resize because we don't want to change the size of the vector
             if (_size == _capacity)
-                reserve(_capacity + 1);
-            _arr[_size++] = x;
+                reserve(_capacity == 0 ? 1 : _capacity * 2);
+            _arr[_size++] = val;
         }
+
         void pop_back()
         {
             // we reduce the size of the vector by 1 , so basically we remove the last element
@@ -227,12 +223,15 @@ namespace ft
                 throw std::out_of_range("out of range");
             _size--;
         }
+        // insert start //
+
+        // insert end //
+        // ! test
         iterator insert(iterator position, const value_type &val)
         {
-            std::cout << "insert 0" << std::endl;
             difference_type pos = position - _arr;
             if (_size == _capacity)
-                reserve(_capacity + 1);
+                reserve(_capacity == 0 ? 1 : _capacity * 2);
             for (difference_type i = _size; i > pos; --i)
                 _arr[i] = _arr[i - 1];
             _arr[pos] = val;
@@ -248,20 +247,21 @@ namespace ft
         // then it inserts x at position n and moves all the elements after n to the right
         // if n is greater than the size of the vector, the new elements are default constructed
 
+        // ! fill
+
         void insert(iterator position, size_type n, const value_type &val)
         {
-            std::cout << "insert 1" << std::endl;
+            // in case of n is greater than the size of the vector, the new elements are default constructed
             difference_type diff = position - _arr;
-            (void)diff;
-            (void)val;
-            if (_size + n > _capacity)
+            if (_capacity < _size + n && n <= _size)
+                reserve(_capacity * 2);
+            else if (_size + n > _capacity)
                 reserve(_capacity + n);
-            // iterator pos = iterator(&_arr[diff]);
-            // for (size_type i = diff; i < _size; ++i)
-            //     _arr[i + n] = _arr[i];
-            // for(size_type i = 0; i < n; ++i)
-            //     _arr[diff + i] = val;
-            // _size += n;
+            for (size_type i = diff; i < _size; ++i)
+                _arr[i + n] = _arr[i];
+            for (size_type i = 0; i < n; ++i)
+                _arr[diff + i] = val;
+            _size += n;
         }
 
         // ! insert with input iterator needs is integral and enable if because of the iterator type, which is not integral
@@ -276,19 +276,18 @@ namespace ft
         void insert(iterator position, InputIterator first, InputIterator last,
                     typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL)
         {
+
             (void)f;
-            std::cout << "insert 2" << std::endl;
+            difference_type pos = position - _arr;
             size_type n = last - first;
-            difference_type diff = position - _arr;
-            if (_size + n > _capacity)
+            if (_capacity < _size + n && n <= _size)
+                reserve(_capacity * 2);
+            else if (_size + n > _capacity)
                 reserve(_capacity + n);
-            for (difference_type i = _size; i > diff; --i)
-                _arr[i] = _arr[i - 1];
+            for (size_type i = pos; i < _size; ++i)
+                _arr[i + n] = _arr[i];
             for (size_type i = 0; i < n; ++i)
-            {
-                _arr[diff + i] = *first;
-                ++first;
-            }
+                _arr[pos + i] = *(first + i);
             _size += n;
         }
 
@@ -353,7 +352,7 @@ namespace ft
             // * it assigns n copies of x to the vector
             // ** example : vector<int> v; (v contains {1, 2, 3, 4, 5}), v.assign(3, 'a') will result in {'a', 'a', 'a'}
             // ? how does this function work ?
-            std::cout << "assign 1" << std::endl;
+            // std::cout << "assign 1" << std::endl;
             if (n > max_size())
                 throw std::length_error("length error");
             if (n > _capacity)
@@ -376,7 +375,7 @@ namespace ft
                     typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL)
         {
             (void)f;
-            std::cout << "assign 2" << std::endl;
+            // std::cout << "assign 2" << std::endl;
             size_type n = last - first;
             if (n > max_size())
                 throw std::length_error("length error");
@@ -394,20 +393,30 @@ namespace ft
             _size = n;
         }
 
-        // resize
-        void resize (size_type n, value_type val = value_type())
+        // resize start //
+        // ! if n is greater than the current size, we fill the new elements with the default value
+        // ! example : vector<int> v; v.resize(10) will call v.reserve(10) and fill the new elements with the default value which is 0
+        // ! the size of vector is basically the filled capacity of the vector, so resize needs to fill the new elements with the default value
+
+        // resize end //
+
+        void resize(size_type n, value_type val = value_type())
         {
             (void)val;
-            // ! if n is greater than the current size, we fill the new elements with the default value
-            // ! example : vector<int> v; v.resize(10) will call v.reserve(10) and fill the new elements with the default value which is 0
-            // ! the size of vector is basically the filled capacity of the vector, so resize needs to fill the new elements with the default value
-            if (n > _capacity)
-                reserve(n);
+            if (n < _size)
+            {
+                _size = n;
+                return;
+            }
             if (n > _size)
+            {
+                reserve(n);
                 for (size_type i = _size; i < n; ++i)
-                    _arr[i] = T();
-            // std::cout << YELLOW << "resize called ( _arr[i] = T()) :  ^ " << DEFAULT << std::endl;
-            _size = n;
+                    _arr[i] = val;
+                _size = n;
+            }
+            if (n > capacity())
+                reserve(n);
         }
     };
     // ! end of class vector

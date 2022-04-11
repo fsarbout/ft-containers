@@ -43,7 +43,7 @@ namespace ft
         iterator(const iterator &copy)
         {
             // * return (*this) will return the current class object
-            // * return (this ) will return the current class  address
+            // * return (this ) will return the current class address
             *this = copy;
         }
         pointer base() const
@@ -102,13 +102,6 @@ namespace ft
         {
             return (this->_ptr >= obj._ptr);
         }
-        iterator operator+(const iterator &obj) const
-        {
-            // std::cout << YELLOW << "operator + (it)" << DEFAULT << std::endl;
-            iterator tmp = *this;
-            tmp._ptr += obj._ptr;
-            return tmp;
-        }
         // operator - returns distance between two iterators
         // we get the value at position
         difference_type operator-(const iterator &obj) const
@@ -132,15 +125,11 @@ namespace ft
 
         iterator operator+(difference_type n) const
         {
-            iterator tmp;
-            tmp._ptr = this->_ptr + n;
-            return tmp;
+            return this->_ptr + n;
         }
         iterator operator-(difference_type n) const
         {
-            iterator tmp;
-            tmp._ptr = this->_ptr - n;
-            return tmp;
+            return this->_ptr - n;
         }
         reference operator[](int n) const
         {
@@ -162,14 +151,6 @@ namespace ft
         }
     };
 
-    // input iterator
-    // template <typename T>
-    // std::ostream &operator<<(std::ostream &out, ft::iterator<T> it)
-    // {
-    //     out << &it;
-    //     return out;
-    // }
-
     template <typename T>
     iterator<T> operator+(std::ptrdiff_t n, ft::iterator<T> it)
     {
@@ -186,7 +167,6 @@ namespace ft
     }
 
 }
-
 #endif
 
 // ! links

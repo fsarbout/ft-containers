@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/fsarbout/Desktop/ft-containers'
+c++ -std=c++98 -Wall -Wextra -Werror -std=gnu++0x -fsanitize=address main.cpp  -o containers
+make: Leaving directory `/Users/fsarbout/Desktop/ft-containers'
+ 

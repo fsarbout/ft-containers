@@ -2,36 +2,37 @@
 
 #include <iterator>
 
+#include "iterator.hpp"
 namespace ft
 {
-    template <class Iter>
+    template <class Iterator>
     class iterator_traits
     {
     public:
-        typedef typename Iter::value_type value_type;
-        typedef typename Iter::difference_type difference_type;
-        typedef typename Iter::pointer pointer;
-        typedef typename Iter::reference reference;
-        typedef typename Iter::iterator_category iterator_category;
+        typedef typename Iterator::value_type value_type;
+        typedef typename Iterator::difference_type difference_type;
+        typedef typename Iterator::pointer pointer;
+        typedef typename Iterator::reference reference;
+        typedef typename Iterator::iterator_category iterator_category;
     };
-    template <class T>
-    class iterator_traits<T *>
+    template <class Iterator>
+    class iterator_traits<Iterator *>
     {
     public:
-        typedef T value_type;
+        typedef Iterator value_type;
         typedef std::ptrdiff_t difference_type;
-        typedef T *pointer;
-        typedef T &reference;
+        typedef Iterator *pointer;
+        typedef Iterator &reference;
         typedef std::random_access_iterator_tag iterator_category;
     };
-    template <class T>
-    class iterator_traits<const T *>
+    template <class Iterator>
+    class iterator_traits<const Iterator *>
     {
     public:
-        typedef T value_type;
+        typedef Iterator value_type;
         typedef std::ptrdiff_t difference_type;
-        typedef const T *pointer;
-        typedef const T &reference;
+        typedef const Iterator *pointer;
+        typedef const Iterator &reference;
         typedef std::random_access_iterator_tag iterator_category;
     };
 }

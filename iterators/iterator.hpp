@@ -1,18 +1,8 @@
 # pragma once
 
-// #define RED "\e[1;31m"
-// #define WHITE "\e[1;37m"
-// #define DEFAULT "\e[0;37m"
-// #define YELLOW "\e[1;33m"
-// #define BLUE "\e[1;34m"
-// #define PURPLE "\033[1;35m"
-
 #include <iostream>
-
+#include <iterator>
 #include "iterator_traits.hpp"
-// #include <cstddef>
-// #include <typeinfo>
-// #include <iterator>
 
 namespace ft
 {
@@ -25,41 +15,34 @@ namespace ft
         typedef T *pointer;
         typedef T &reference;
         typedef std::random_access_iterator_tag iterator_category;
-        // std::ptrdiff_t is the signed integer type of the result of subtracting two pointers.
+
     private:
         pointer _ptr;
 
     public:
-        iterator() : _ptr(NULL)
-        {
-        }
-        iterator(pointer ptr) : _ptr(ptr)
-        {
-        }
-        ~iterator()
-        {
-        }
+        iterator() : _ptr(NULL) {}
+        iterator(pointer ptr) : _ptr(ptr) {}
+        ~iterator() {}
         iterator(const iterator &copy)
         {
             // * return (*this) will return the current class object
             // * return (this ) will return the current class address
+            // std::cout << "this: " << this << "copy " << &copy << std::endl;
             *this = copy;
         }
-        pointer base() const
-        {
-            return _ptr;
-        }
-        // ? TF I need to return by reference ?!!!! both working fine
+
         iterator &operator=(const iterator &obj)
         {
             this->_ptr = obj._ptr;
             return *this;
         }
+
         iterator &operator++()
         {
             this->_ptr++;
             return *this;
         }
+        
         iterator operator++(int)
         {
             iterator tmp(*this);
@@ -102,10 +85,9 @@ namespace ft
             return (this->_ptr >= obj._ptr);
         }
         // operator - returns distance between two iterators
-        // we get the value at position
         difference_type operator-(const iterator &obj) const
         {
-            // * Subtraction gives you the distance - the number of steps from one point to the other
+            // * Subtraction gives you the distance >> the number of steps from one point to the other
             return (this->_ptr - obj._ptr);
         }
 
@@ -159,16 +141,7 @@ namespace ft
     template <typename T>
     iterator<T> operator-(std::ptrdiff_t n, ft::iterator<T> it)
     {
-        // ft::iterator<T> tmp;
-        // tmp.setPtr(it.getPtr() - n);
-        // return tmp;
         return it - n;
     }
 
 }
-
-// ! links
-// ! https://www.javatpoint.com/cpp-iterators
-// ! https://www.cplusplus.com/reference/iterator/
-// ! https://www.cplusplus.com/reference/iterator/RandomAccessiterator/
-// ! https://programmer.group/principle-and-simple-implementation-of-c-stl-iterator-just-read-this-one.html

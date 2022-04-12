@@ -89,14 +89,14 @@ namespace ft
         // destructor
         ~vector()
         {
-            // if (_arr)
-            // {
+            if (_arr)
+            {
                 for (size_type i = 0; i < _size; i++)
                 {
                     alloc.destroy(&_arr[i]);
                 }
                 alloc.deallocate(_arr, _capacity);
-            // }
+            }
         }
 
         vector &operator=(const vector &x)
@@ -202,7 +202,6 @@ namespace ft
                 alloc.deallocate(_arr, _capacity);
                 _arr = tmp;
                 _capacity = n;
-                alloc.deallocate(tmp, n);
             }
             // this function has no effect on size , and cannot alter its elements
             // we use allocator so in case of failure it will throw an exception : std::bad_alloc
@@ -227,11 +226,13 @@ namespace ft
 
         // insert end //
         // ! test
+
         iterator insert(iterator position, const value_type &val)
         {
             difference_type pos = position - _arr;
             if (_size == _capacity)
                 reserve(_capacity == 0 ? 1 : _capacity * 2);
+            // ? 
             for (difference_type i = _size; i > pos; --i)
                 _arr[i] = _arr[i - 1];
             _arr[pos] = val;
@@ -276,7 +277,6 @@ namespace ft
         void insert(iterator position, InputIterator first, InputIterator last,
                     typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL)
         {
-
             (void)f;
             difference_type pos = position - _arr;
             size_type n = last - first;
@@ -333,6 +333,10 @@ namespace ft
                 _arr[i] = _arr[i + n];
             _size -= n;
             return first;
+            // 1 2 3 4 5 6 
+            // it = begin(); == 1
+            // it2 = begin() + 2; == 3 
+            // erase (it, it2); == 
         }
         void swap(vector &x)
         {

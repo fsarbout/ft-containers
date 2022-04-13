@@ -49,6 +49,9 @@
 # test with debugger and check values .
 # pragme once &&  pre processing 
 
+# rvalues and lvalues ?
+* 
+
 # typedef typename ?
 typename : telling the compiler that the template parameter is a type.
 typedef : define an existing type with a new name.

@@ -27,6 +27,7 @@ namespace ft
         {
             // * return (*this) will return the current class object
             // * return (this ) will return the current class address
+            // * return (&this ) will return the current class address
             // std::cout << "this: " << this << "copy " << &copy << std::endl;
             *this = copy;
         }
@@ -34,6 +35,7 @@ namespace ft
         iterator &operator=(const iterator &obj)
         {
             this->_ptr = obj._ptr;
+            std::cout << "this: " << this << "obj: " << &obj << std::endl;
             return *this;
         }
 
@@ -91,7 +93,6 @@ namespace ft
             return (this->_ptr - obj._ptr);
         }
 
-
         reference operator*() const
         {
             // returns the value of the current object
@@ -137,11 +138,4 @@ namespace ft
     {
         return it + n;
     }
-
-    template <typename T>
-    iterator<T> operator-(std::ptrdiff_t n, ft::iterator<T> it)
-    {
-        return it - n;
-    }
-
 }

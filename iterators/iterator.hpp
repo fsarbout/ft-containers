@@ -34,8 +34,9 @@ namespace ft
 
         iterator &operator=(const iterator &obj)
         {
+
             this->_ptr = obj._ptr;
-            std::cout << "this: " << this << "obj: " << &obj << std::endl;
+            // std::cout << "this: " << this << "obj: " << &obj << std::endl;
             return *this;
         }
 

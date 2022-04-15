@@ -31,6 +31,7 @@ namespace ft
             // std::cout << "this: " << this << "copy " << &copy << std::endl;
             *this = copy;
         }
+    
 
         iterator &operator=(const iterator &obj)
         {
@@ -93,13 +94,16 @@ namespace ft
             // * Subtraction gives you the distance >> the number of steps from one point to the other
             return (this->_ptr - obj._ptr);
         }
-
+   
         reference operator*() const
         {
             // returns the value of the current object
             return *this->_ptr;
         }
-        pointer operator->()
+        // *it =
+
+      
+         pointer operator->()   const
         {
             //  returns the address of the object
             //  should return a reference if I want to use for modification

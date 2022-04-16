@@ -27,15 +27,15 @@ namespace ft
         {
             // * return (*this) will return the current class object
             // * return (this ) will return the current class address
-            // * return (&this ) will return the current class address
+            // * (&this) : "this" is a pointer, don't need it's address , we need the object it points to.
+            // * return (*this) without reference will return, will just clone the current object(allocated on stack)
+            // * so changes mades on it will not affect the original object
             // std::cout << "this: " << this << "copy " << &copy << std::endl;
             *this = copy;
         }
-    
 
         iterator &operator=(const iterator &obj)
         {
-
             this->_ptr = obj._ptr;
             // std::cout << "this: " << this << "obj: " << &obj << std::endl;
             return *this;
@@ -95,19 +95,18 @@ namespace ft
             return (this->_ptr - obj._ptr);
         }
    
-        reference operator*() const
+        reference operator*()
         {
+            // * returning reference: references can never be null, so we are safe from tyring to dereference a null pointer
             // returns the value of the current object
             return *this->_ptr;
         }
-        // *it =
-
       
-         pointer operator->()   const
+        pointer operator->() const
         {
             //  returns the address of the object
             //  should return a reference if I want to use for modification
-            return this->_ptr;
+            return this->_ptr; // == return (*this)._ptr;
         }
 
         iterator operator+(difference_type n) const

@@ -8,7 +8,7 @@
 #include <memory>
 #include "../utils/is_integral.hpp"
 #include "../utils/enable_if.hpp"
-#include "../iterators/iterator.hpp"
+#include "iterator.hpp"
 #include "../iterators/reverse_iterator.hpp"
 #include "../iterators/iterator_traits.hpp"
 
@@ -74,7 +74,7 @@ namespace ft
 
         template <class InputIterator>
         vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
-               typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL): alloc(alloc), _arr(NULL), _size(0), _capacity(0)
+               typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL) : alloc(alloc), _arr(NULL), _size(0), _capacity(0)
         {
             (void)f;
             reserve(last - first);
@@ -94,7 +94,7 @@ namespace ft
                 alloc.deallocate(_arr, _capacity);
             }
         }
-        // ? without const testclass& t3 = t2 = t1; after assigning t1 to t2 the copy value of t1 will be destroyed 
+        // ? without const testclass& t3 = t2 = t1; after assigning t1 to t2 the copy value of t1 will be destroyed
         vector &operator=(const vector &x)
         {
             // std::cout << "VECTOR ASSIGNMENT" << std::endl;
@@ -202,7 +202,6 @@ namespace ft
             // this function has no effect on size , and cannot alter its elements
             // we use allocator so in case of failure it will throw an exception : std::bad_alloc
             // deallocate tmp after use
-            
         }
         void push_back(const value_type &val)
         {
@@ -228,7 +227,7 @@ namespace ft
             difference_type pos = position - _arr;
             if (_size == _capacity)
                 reserve(_capacity == 0 ? 1 : _capacity * 2);
-            // ? 
+            // ?
             for (difference_type i = _size; i > pos; --i)
                 _arr[i] = _arr[i - 1];
             _arr[pos] = val;
@@ -329,10 +328,10 @@ namespace ft
                 _arr[i] = _arr[i + n];
             _size -= n;
             return first;
-            // 1 2 3 4 5 6 
+            // 1 2 3 4 5 6
             // it = begin(); == 1
-            // it2 = begin() + 2; == 3 
-            // erase (it, it2); == 
+            // it2 = begin() + 2; == 3
+            // erase (it, it2); ==
         }
         void swap(vector &x)
         {
@@ -400,9 +399,20 @@ namespace ft
 
         // resize end //
 
+        // void resize(size_type n, value_type val = value_type())
+        // {
+
+        //     if (n <= _capacity && _size <= _capacity - n)
+        //     {
+                
+        //         _size = n;
+        //         return;
+        //     }
+
+        // }
+
         void resize(size_type n, value_type val = value_type())
         {
-            (void)val;
             if (n < _size)
             {
                 _size = n;
@@ -412,11 +422,12 @@ namespace ft
             {
                 reserve(n);
                 for (size_type i = _size; i < n; ++i)
-                    _arr[i] = val;
+                    push_back(val);
                 _size = n;
             }
             if (n > capacity())
                 reserve(n);
+
         }
     };
     // ! end of class vector
@@ -482,11 +493,6 @@ std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
 }
 
 // TODO: swap : // ? quesition : what about swaping allocators ?
-
-// ? when should operators return by reference ?
-// answer : * if the built-in operator returns an rvalue then your overload should return a reference.
-// : * if the built-in returns an lvalue then your overload should return a value.
-// lvalue: is an object that is not a temporary object.
 
 // Returning a value also forces unnecessary trips through the object's copy constructor,
 //  costing you in performance.?

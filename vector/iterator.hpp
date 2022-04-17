@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <iterator>
-#include "iterator_traits.hpp"
+#include "../iterators/iterator_traits.hpp"
 
 namespace ft
 {
@@ -108,6 +108,8 @@ namespace ft
             //  should return a reference if I want to use for modification
             return this->_ptr; // == return (*this)._ptr;
         }
+
+
 
         iterator operator+(difference_type n) const
         {

@@ -8,24 +8,17 @@ namespace ft
         typedef T1 first_type;
         typedef T2 second_type;
 
-    private:
+    public:
         first_type first;
         second_type second;
-
-    public:
-        pair() : first(), second() {}
+        
+        pair() {}
 
         template <class U, class V>
         pair(const pair<U, V> &pr) : first(pr.first), second(pr.second) {}
-        pair (const first_type& a, const second_type& b) : first(a), second(b) {}
-        // first
-        first_type& first() { return first; }
-        const first_type& first() const { return first; }
-        // second
-        second_type& second() { return second; }
-        const second_type& second() const { return second; }
 
-        // operator =
+        pair (const first_type& a, const second_type& b) : first(a), second(b) {}
+        
         template <class U, class V>
         pair &operator=(const pair<U, V> &pr)
         {

@@ -2,7 +2,6 @@
 
 namespace ft
 {
-     // ! is_integral
     template <class T>
     struct is_integral
     {
@@ -74,3 +73,5 @@ namespace ft
         enum { value = true };
     };
 }
+
+// * setted by default to false >> true if it finds a match

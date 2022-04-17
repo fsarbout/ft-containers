@@ -11,11 +11,12 @@
 /* ************************************************************************** */
 
 #include <iostream>
-#include "utils/equal.hpp"
+#include "../utils/equal.hpp"
+#include "../utils/make_pair.hpp"
 #include <sys/time.h>
 #if NS
 #define NAMESPACE "FT  : "
-#include "vector/Vector.hpp"
+#include "../vector/Vector.hpp"
 // #include "stack/stack.hpp"
 // #include "map/map.hpp"
 #else

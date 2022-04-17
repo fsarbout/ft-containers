@@ -11,6 +11,7 @@ namespace ft
                 return false;
         return true;
     }
+
     // ? how does it work?
     // * it returns true if the ranges are the same size and the elements are the same
 
@@ -23,5 +24,13 @@ namespace ft
                 return false;
         return true;
     }
-
 }
+
+// * pred is a binary function that accepts two arguments of the same type and returns a bool (true if x == y, false otherwise)
+// * example :
+// ! {
+// bool mypredicate(int i, int j)
+// {
+//     return (i == j);
+// }
+// ! }

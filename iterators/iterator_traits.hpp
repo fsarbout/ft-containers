@@ -2,7 +2,7 @@
 
 #include <iterator>
 
-#include "iterator.hpp"
+#include "../vector/iterator.hpp"
 namespace ft
 {
     template <class Iterator>
@@ -38,9 +38,6 @@ namespace ft
 }
 // provides infos about iterator type
 
-// what's good about stl ?
-// the separation of data(containers) and operations(algorithms)
-// the bridge between the two is the iterator
 
 // ! links
 // ! https://www.codeproject.com/Articles/36530/An-Introduction-to-Iterator-Traits

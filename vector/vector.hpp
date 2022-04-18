@@ -30,7 +30,7 @@ namespace ft
     {
     public:
         typedef T value_type;
-        typedef std::allocator<value_type> allocator_type;
+        typedef Alloc allocator_type;
         typedef T &reference;
         typedef const T &const_reference;
         typedef T *pointer;
@@ -43,17 +43,17 @@ namespace ft
         typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
     private:
-        allocator_type alloc;
+        allocator_type _alloc;
         pointer _arr;
         size_type _size;
         size_type _capacity;
 
     public:
         //  ! default constructor
-        explicit vector(const allocator_type &alloc = allocator_type()) : alloc(alloc), _arr(NULL), _size(0), _capacity(0) {}
+        explicit vector(const allocator_type &alloc= allocator_type()) : _alloc(alloc), _arr(NULL), _size(0), _capacity(0) {}
 
         // ! fill constructor
-        explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc = allocator_type()) : alloc(alloc), _arr(NULL), _size(0), _capacity(0)
+        explicit vector(size_type n, const value_type &val = value_type(), const allocator_type &alloc= allocator_type()) : _alloc(alloc), _arr(NULL), _size(0), _capacity(0)
         {
             // constructs container with n elements, each initialized with val
             // like : vector<int> v(10, 0); >> will create a vector of 10 ints with all elements initialized to 0
@@ -73,8 +73,8 @@ namespace ft
         // ! range constructor
 
         template <class InputIterator>
-        vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
-               typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL) : alloc(alloc), _arr(NULL), _size(0), _capacity(0)
+        vector(InputIterator first, InputIterator last, const allocator_type &alloc= allocator_type(),
+               typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL) : _alloc(alloc), _arr(NULL), _size(0), _capacity(0)
         {
             (void)f;
             reserve(last - first);
@@ -85,14 +85,9 @@ namespace ft
         // destructor
         ~vector()
         {
-            if (_arr)
-            {
-                for (size_type i = 0; i < _size; i++)
-                {
-                    alloc.destroy(&_arr[i]);
-                }
-                alloc.deallocate(_arr, _capacity);
-            }
+            for (size_type i = 0; i < _size; ++i)
+                _alloc.destroy(&_arr[i]);
+            _alloc.deallocate(_arr, _capacity);
         }
         // ? without const testclass& t3 = t2 = t1; after assigning t1 to t2 the copy value of t1 will be destroyed
         vector &operator=(const vector &x)
@@ -102,7 +97,7 @@ namespace ft
             {
                 _size = x._size;
                 _capacity = x._capacity;
-                _arr = alloc.allocate(_capacity);
+                _arr = _alloc.allocate(_capacity);
                 for (size_type i = 0; i < _size; ++i)
                     _arr[i] = x._arr[i];
             }
@@ -141,7 +136,7 @@ namespace ft
         const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
 
         // get_allocator returns a copy of the allocator object used by the vector
-        allocator_type get_allocator() const { return alloc; }
+        allocator_type get_allocator() const { return this->_alloc; }
 
         void clear() { _size = 0; }
         size_type size() const { return _size; }
@@ -156,7 +151,7 @@ namespace ft
 
         // max_size returns the maximum possible number of elements that can be stored in the vector
         // ? does it change each time we insert an element ? (: no)
-        size_type max_size() { return alloc.max_size(); }
+        size_type max_size() { return _alloc.max_size(); }
 
         // ! end of short functions
         // ? at vs [] ? : at checks if the index is in the range of the vector and thwors an exception if it is not
@@ -192,10 +187,10 @@ namespace ft
                 //      and the new capacity to the old capacity
                 //  we use tmp to avoid the problem of the old array being deleted before the new array is copied
                 // ? and case of arr is empty should I use nullptr instead of tmp ?
-                pointer tmp = alloc.allocate(n);
+                pointer tmp = _alloc.allocate(n);
                 for (size_type i = 0; i < _size; ++i)
                     tmp[i] = _arr[i];
-                alloc.deallocate(_arr, _capacity);
+                _alloc.deallocate(_arr, _capacity);
                 _arr = tmp;
                 _capacity = n;
             }
@@ -356,10 +351,10 @@ namespace ft
                 throw std::length_error("length error");
             if (n > _capacity)
             {
-                pointer tmp = alloc.allocate(n);
+                pointer tmp = _alloc.allocate(n);
                 for (size_type i = 0; i < _size; ++i)
                     tmp[i] = _arr[i];
-                alloc.deallocate(_arr, _capacity);
+                _alloc.deallocate(_arr, _capacity);
                 _arr = tmp;
                 _capacity = n;
             }
@@ -380,10 +375,10 @@ namespace ft
                 throw std::length_error("length error");
             if (n > _capacity)
             {
-                pointer tmp = alloc.allocate(n);
+                pointer tmp = _alloc.allocate(n);
                 for (size_type i = 0; i < _size; ++i)
                     tmp[i] = _arr[i];
-                alloc.deallocate(_arr, _capacity);
+                _alloc.deallocate(_arr, _capacity);
                 _arr = tmp;
                 _capacity = n;
             }
@@ -399,35 +394,26 @@ namespace ft
 
         // resize end //
 
-        // void resize(size_type n, value_type val = value_type())
-        // {
-
-        //     if (n <= _capacity && _size <= _capacity - n)
-        //     {
-                
-        //         _size = n;
-        //         return;
-        //     }
-
-        // }
-
         void resize(size_type n, value_type val = value_type())
         {
             if (n < _size)
             {
+                for (size_type i = n; i < _size; ++i)
+                    _alloc.destroy(_arr + i);
                 _size = n;
-                return;
             }
-            if (n > _size)
+            else if (n > _capacity)
             {
-                reserve(n);
+                if (n > (_capacity * 2))
+                    reserve(n);
+                else
+                    reserve(_capacity * 2);
                 for (size_type i = _size; i < n; ++i)
                     push_back(val);
-                _size = n;
             }
-            if (n > capacity())
-                reserve(n);
-
+            else if (n > _size)
+                for (size_type i = _size; i < n; ++i)
+                    push_back(val);
         }
     };
     // ! end of class vector

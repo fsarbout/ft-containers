@@ -5,17 +5,13 @@
 #include <iostream> // std::cout
 
 #define GREEN "\e[1;32m"
-#define RED "\e[1;31m"
-#define WHITE "\e[1;37m"
 #define DEFAULT "\e[0;37m"
-#define YELLOW "\e[1;33m"
-#define BLUE "\e[1;34m"
-#define PURPLE "\e[1;35m"
-#define COLOR "\e[1;36m"
+
+
 
 int main()
 {
-    std::cout << COLOR;
+    std::cout << GREEN;
     std::cout << "***********************************************************" << std::endl;
     std::cout << "*                            STD TEST                     *" << std::endl;
     std::cout << "***********************************************************" << std::endl;
@@ -30,7 +26,7 @@ int main()
         std::cout << "foo: " << foo.first << ", " << foo.second << '\n';
         std::cout << "bar: " << bar.first << ", " << bar.second << '\n';
     }
-    std::cout << COLOR;
+    std::cout << GREEN;
     std::cout << "***********************************************************" << std::endl;
     std::cout << "*                            FT  TEST                     *" << std::endl;
     std::cout << "***********************************************************" << std::endl;

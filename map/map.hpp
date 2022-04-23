@@ -15,17 +15,19 @@ namespace ft
     class map
     {
     public:
-        typedef ft::pair<const key_type, mapped_type> typedef Key key_type typedef T mapped_type typedef Compare key_compare typedef... value_compare typedef... allocator_type;
-        typedef... reference;
-        typedef... const_reference;
-        typedef... pointer;
-        typedef... const_pointer;
-        typedef... iterator;
-        typedef... const_iterator;
-        typedef... reverse_iterator;
-        typedef... const_reverse_iterator;
-        typedef... difference_type;
-        typedef... size_type;
+        // typedef ft::pair<const key_type, mapped_type> typedef Key key_type typedef T mapped_type typedef Compare key_compare typedef... value_compare typedef... allocator_type;
+        // typedef... reference;
+        // typedef... const_reference;
+        // typedef... pointer;
+        // typedef... const_pointer;
+        // typedef... iterator;
+        // typedef... const_iterator;
+        // typedef... reverse_iterator;
+        // typedef... const_reverse_iterator;
+        // typedef... difference_type;
+        // typedef... size_type;
+
+        
 
     private:
         // data

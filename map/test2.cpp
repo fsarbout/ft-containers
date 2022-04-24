@@ -237,6 +237,6 @@ int main()
   root = insertNode(root, 11);
   printTree(root, "", true);
   root = deleteNode(root, 13);
-  cout << "After deleting " << endl;
-  printTree(root, "", true);
+  // cout << "After deleting " << endl;
+  // printTree(root, "", true);
 }

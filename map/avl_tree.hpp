@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 #include "../utils/pair.hpp"
+#include "../utils/make_pair.hpp"
 
 // Internal node containing node references(left , right) and node data
 namespace ft
@@ -19,8 +20,11 @@ namespace ft
         int _balance_factor;
 
         Node() : _data(NULL), _left(NULL), _right(NULL), _height(0), _balance_factor(0) {}
+
         ~Node() {}
-        Node(T *data, Node<T> *left, Node<T> *right) : _data(data), _left(left), _right(right) {}
+
+        Node(T *data, Node<T> *right, Node<T> *left, Node<T> *parent) : _data(data), _left(left), _right(right), _parent(parent) {}
+
         T operator*() { return *this->_data; }
     };
 
@@ -49,7 +53,11 @@ namespace ft
         allocator_type _pair_allocator;
         node_allocator _node_allocator;
 
-        // ! private methods
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
+        // ! ****                           private methods                                 ****
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
 
         int height(node_type *node)
         {
@@ -70,13 +78,10 @@ namespace ft
                 return false;
 
             // value found
-            // else if (node->_data == elem)
-            // compare using _compare
             else if (_equal(node->_data->first, elem))
                 return true;
 
             // move to the left subtree because the value is smaller than the current node
-            // else if (elem < node->_data)
             else if (_compare(elem, node->_data->first))
                 return __exists(node->_left, elem);
 
@@ -85,23 +90,12 @@ namespace ft
                 return __exists(node->_right, elem);
         }
 
-        // ? private height and exist are called by the public ones
-
         // ! end of private methods
         node_type *add(node_type *node, value_type value)
         {
             if (node == NULL)
-            {
-                node_type *tmp = _node_allocator.allocate(1);
-                tmp->_data = _pair_allocator.allocate(1);
-                _pair_allocator.construct(tmp->_data, value);
-                tmp->_left = NULL;
-                tmp->_parent = NULL;
-                tmp->_right = NULL;
-                tmp->_height = 0;
-                tmp->_balance_factor = 0;
-                return tmp;
-            }
+                return (newNode(value));
+
             else if (value.first < node->_data->first)
             {
                 node->_left = add(node->_left, value);
@@ -113,13 +107,92 @@ namespace ft
                 node->_right->_parent = node;
             }
             else
-            {
                 node->_data->second = value.second;
-            }
-            // update height
             node->_height = 1 + std::max(height(node->_left), height(node->_right));
+            node->_balance_factor = height(node->_left) - height(node->_right);
+
+            update(node);
             return node;
         }
+
+        // allocate a new node
+        node_type *newNode(value_type value)
+        {
+            node_type *tmp = _node_allocator.allocate(1);
+            tmp->_data = _pair_allocator.allocate(1);
+            _pair_allocator.construct(tmp->_data, value);
+            tmp->_left = NULL;
+            tmp->_parent = NULL;
+            tmp->_right = NULL;
+            tmp->_height = 0;
+            tmp->_balance_factor = 0;
+            return tmp;
+        }
+        node_type *remove(node_type *node, key_type key)
+        {
+            if (!node)
+                return NULL;
+
+            if (_compare(key, node->_data->first))
+                node->_left = remove(node->_left, key);
+
+            else if (_compare(node->_data->first, key))
+                node->_right = remove(node->_right, key);
+            
+            else
+            {
+                if (!node->_left && !node->_right)
+                {
+                    std::cout << "end" << std::endl;
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.deallocate(node->_data, 1);
+                    _node_allocator.deallocate(node, 1);
+                    return NULL;
+                }
+
+                else if (!node->_left)
+                {
+                    node_type *tmp = node->_right;
+                    std::swap(node->_data, tmp->_data);
+                    node->_right = remove(node->_right, key);
+                    return node;
+                }
+
+                else if (!node->_right)
+                {
+                    node_type *tmp = node->_left;
+                    std::swap(node->_data, tmp->_data);
+                    node->_left = remove(node->_left, key);
+                    return node;
+                }
+
+                else
+                {
+                    node_type *tmp = min_node(node->_right);
+                    std::swap(node->_data, tmp->_data);
+                    node->_right = remove(node->_right, key);
+                }
+            }
+            update(node);
+            // I have to return the balanced node
+            return node;
+        }
+
+        void update(node_type *node)
+        {
+            if (node == NULL)
+                return;
+            node->_height = 1 + std::max(height(node->_left), height(node->_right));
+            node->_balance_factor = height(node->_left) - height(node->_right);
+            update(node->_left);
+            update(node->_right);
+        }
+
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
+        // ! ****                           public methods                                  ****
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
 
     public:
         // constructor
@@ -127,10 +200,12 @@ namespace ft
         {
             _root = NULL;
         }
+
         avl_tree(const avl_tree &other) : _root(NULL)
         {
             _root = copy(other._root);
         }
+
         avl_tree &operator=(const avl_tree &other)
         {
             if (this != &other)
@@ -140,17 +215,21 @@ namespace ft
             }
             return *this;
         }
+
         ~avl_tree()
         {
             clear();
         }
+
         void clear()
         {
             // clear(_root);
             _root = NULL;
         }
+
         bool exists(T elem) { return (__exists(_root, elem)); }
         // bool empty() { return _size == 0; }
+
         int height() const
         {
             if (_root == NULL)
@@ -176,7 +255,7 @@ namespace ft
             if (node->_right == NULL)
                 return node;
             else
-                return max(node->_right);
+                return max_node(node->_right);
         }
 
         // return min with recursive (smallest value in the tree(left most))
@@ -185,7 +264,7 @@ namespace ft
             if (node->_left == NULL)
                 return node;
             else
-                return min(node->_left);
+                return min_node(node->_left);
         }
 
         // ! print tree
@@ -194,28 +273,35 @@ namespace ft
             (void)last;
             if (node != nullptr)
             {
-                // std::cout << indent;
-                // if (last)
-                // {
-                //     std::cout << "R----";
-                //     indent += "   ";
-                // }
-                // else
-                // {
-                //     std::cout << "L----";
-                //     indent += "|  ";
-                // }
-                std::cout << node->_data->second << std::endl;
-                // std::cout << "left" << std::endl;
+                std::cout << indent;
+                if (last)
+                {
+                    std::cout << "R----";
+                    indent += "   ";
+                }
+                else
+                {
+                    std::cout << "L----";
+                    indent += "|  ";
+                }
+                std::cout << node->_data->first << std::endl;
                 printTree(node->_left, indent, false);
-                // std::cout << "right" << std::endl;
                 printTree(node->_right, indent, true);
             }
         }
+
         void print_it(avl_tree<int, int> &tree)
         {
             tree.printTree(tree._root, "", true);
         }
-    };
 
+        bool remove(key_type key)
+        {
+            if (!exists(key))
+                return false;
+            _root = remove(_root, key);
+            _size--;
+            return true;
+        }
+    };
 } // namespace ft

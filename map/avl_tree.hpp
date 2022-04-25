@@ -15,7 +15,7 @@ namespace ft
         T *_data;
         Node<T> *_left;
         Node<T> *_right;
-        Node<T> *_parent; // still don't know why
+        Node<T> *_parent;
         int _height;
         int _balance_factor;
 
@@ -23,9 +23,9 @@ namespace ft
 
         ~Node() {}
 
-        Node(T *data, Node<T> *right, Node<T> *left, Node<T> *parent) : _data(data), _left(left), _right(right), _parent(parent) {}
+        // Node(T *data, Node<T> *right, Node<T> *left, Node<T> *parent) : _data(data), _left(left), _right(right), _parent(parent) {}
 
-        T operator*() { return *this->_data; }
+        // T operator*() { return *this->_data; }
     };
 
     template <class Key,                                            // map::key_type
@@ -71,7 +71,7 @@ namespace ft
             return (_compare(key1, key2) == false && _compare(key2, key1) == false);
         }
 
-        bool __exists(node_type *node, T elem) const
+        bool __exists(node_type *node, mapped_type elem) const
         {
             // reached the end of the tree, value not found
             if (node == NULL)
@@ -80,7 +80,6 @@ namespace ft
             // value found
             else if (_equal(node->_data->first, elem))
                 return true;
-
 
             // move to the left subtree because the value is smaller than the current node
             else if (_compare(elem, node->_data->first))
@@ -94,6 +93,7 @@ namespace ft
         // ! end of private methods
         node_type *add(node_type *node, value_type value)
         {
+            std::cout << "add" << std::endl;
             if (node == NULL)
                 return (newNode(value));
 
@@ -110,8 +110,8 @@ namespace ft
             else
                 node->_data->second = value.second;
             update(node);
-            // balance(node);
-            return node;
+            return balance(node);
+            // return node;
         }
 
         // allocate a new node
@@ -173,8 +173,7 @@ namespace ft
                 }
             }
             update(node);
-            // I have to return the balanced node
-            return node;
+            return balance(node);
         }
 
         void update(node_type *node)
@@ -195,15 +194,9 @@ namespace ft
 
     public:
         // constructor
-        avl_tree()
-        {
-            _root = NULL;
-        }
+        avl_tree()  {  _root = NULL;  }
 
-        avl_tree(const avl_tree &other) : _root(NULL)
-        {
-            _root = copy(other._root);
-        }
+        avl_tree(const avl_tree &other) : _root(NULL) { _root = copy(other._root);  }
 
         avl_tree &operator=(const avl_tree &other)
         {
@@ -227,7 +220,6 @@ namespace ft
         }
 
         bool exists(T elem) { return (__exists(_root, elem)); }
-        // bool empty() { return _size == 0; }
 
         int height() const
         {
@@ -236,8 +228,8 @@ namespace ft
             return _root->_height;
         }
 
-        // add an lemenet to this binary tree.
         // return true if the element is added successfully.
+
         bool insert(value_type elem)
         {
             if (!exists(elem.first))
@@ -248,7 +240,7 @@ namespace ft
             }
             return false;
         }
-        // return max with recursive
+
         node_type *max_node(node_type *node)
         {
             if (node->_right == NULL)
@@ -257,7 +249,6 @@ namespace ft
                 return max_node(node->_right);
         }
 
-        // return min with recursive (smallest value in the tree(left most))
         node_type *min_node(node_type *node)
         {
             if (node->_left == NULL)
@@ -309,63 +300,75 @@ namespace ft
         // ! ***********************************************************************************
         // ! ***********************************************************************************
         
-        // TODO : is_balanced(tree)
-        // TODO : balance(tree)
-        // TODO : left_rotate(tree)
-        // TODO : right_rotate(tree)
-        // TODO : left_right_rotate(tree)
-        // TODO : right_left_rotate(tree)
-        // TODO : balance_factor(tree)
-        
-        // bool is_balanced(node_type *node)
-        // {
-        //     if (node == NULL)
-        //         return true;
-        //     if (abs(balance_factor(node)) > 1)
-        //         return false;
-        //     return is_balanced(node->_left) && is_balanced(node->_right);
-        // }
+        node_type *balance(node_type *node)
+        {
+            if (node->_balance_factor > 1)
+            {
+                if (node->_left->_balance_factor > 0)
+                    return (right_rotate(node));
+                else
+                    return (lr_rotate(node));
+            }
+            else if (node->_balance_factor < -1)
+            {
+                if (node->_right->_balance_factor < 0)
+                    return (left_rotate(node));
+                else
+                    return (rl_rotate(node));
+            }
+            return node;
+        }
 
-        // void balance(node_type &node)
-        // {
-        //     if (balance_factor(node) > 1)
-        //     {
-        //         if (balance_factor(node->_left) < 0)
-        //             left_rotate(node->_left);
-        //         right_rotate(node);
-        //     }
-        //     else if (balance_factor(node) < -1)
-        //     {
-        //         if (balance_factor(node->_right) > 0)
-        //             right_rotate(node->_right);
-        //         left_rotate(node);
-        //     }
-        // }
+        node_type *left_rotate(node_type *node)
+        {
+            node_type *tmp = node->_right;
+            node->_right = tmp->_left;
+            if (tmp->_left)
+                tmp->_left->_parent = node;
+            tmp->_parent = node->_parent;
+            if (!node->_parent)
+                _root = tmp;
+            else if (node == node->_parent->_left)
+                node->_parent->_left = tmp;
+            else
+                node->_parent->_right = tmp;
+            tmp->_left = node;
+            node->_parent = tmp;
+            update(node);
+            update(tmp);
+            return tmp;
+        }
 
-        // void left_rotate(node_type &node)
-        // {
-        //     (void)node;
-        //     std::cout << "left_rotate" << std::endl;
-        // }
-        // void right_rotate(node_type &node)
-        // {
-        //     (void)node;
-        //     std::cout << "right_rotate" << std::endl;
-        // }
-        // void left_right_rotate(node_type &node)
-        // {
-        //     (void)node;
-        //     std::cout << "left_right_rotate" << std::endl;
-        // }
-        // void right_left_rotate(node_type &node)
-        // {
-        //     (void)node;
-        //     std::cout << "right_left_rotate" << std::endl;
-        // }
+        node_type *right_rotate(node_type *node)
+        {
+            node_type *temp = node->_left;
+            node->_left = temp->_right;
+            if (temp->_right)
+                temp->_right->_parent = node;
+            temp->_parent = node->_parent;
+            if (!node->_parent)
+                _root = temp;
+            else if (node == node->_parent->_left)
+                node->_parent->_left = temp;
+            else
+                node->_parent->_right = temp;
+            temp->_right = node;
+            node->_parent = temp;
+            update(node);
+            update(temp);
+            return temp;
+        }
 
+        node_type *lr_rotate(node_type *node)
+        {
+            node->_left = left_rotate(node->_left);
+            return (right_rotate(node));
+        }
 
-
-        
-
+        node_type *rl_rotate(node_type *node)
+        {
+            node->_right = right_rotate(node->_right);
+            return (left_rotate(node));
+        }
     };
 } // namespace ft

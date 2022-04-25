@@ -28,7 +28,7 @@ int main()
     tree.print_it(tree);
     std::cout << std::endl;
     tree.remove(pair4.first);
-    // tree.remove(pair2.first);
-    std::cout << "after remove " << std::endl << std::endl;;
+    std::cout << "after remove " << std::endl << std::endl;
     tree.print_it(tree);
+    // system("leaks ft_containers");
 }

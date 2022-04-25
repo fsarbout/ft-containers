@@ -11,4 +11,7 @@
 # Built Visual Studio Code Extensions
 *.vsix
 
-./ft_containers_tests/
+ft_containers_tests/
+ft_containers.dSYM
+a.out
+ft_containers

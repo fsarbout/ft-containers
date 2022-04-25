@@ -81,6 +81,7 @@ namespace ft
             else if (_equal(node->_data->first, elem))
                 return true;
 
+
             // move to the left subtree because the value is smaller than the current node
             else if (_compare(elem, node->_data->first))
                 return __exists(node->_left, elem);
@@ -108,10 +109,8 @@ namespace ft
             }
             else
                 node->_data->second = value.second;
-            node->_height = 1 + std::max(height(node->_left), height(node->_right));
-            node->_balance_factor = height(node->_left) - height(node->_right);
-
             update(node);
+            // balance(node);
             return node;
         }
 
@@ -138,7 +137,7 @@ namespace ft
 
             else if (_compare(node->_data->first, key))
                 node->_right = remove(node->_right, key);
-            
+
             else
             {
                 if (!node->_left && !node->_right)
@@ -303,5 +302,70 @@ namespace ft
             _size--;
             return true;
         }
+
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
+        // ! ****                           balance methods                                 ****
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
+        
+        // TODO : is_balanced(tree)
+        // TODO : balance(tree)
+        // TODO : left_rotate(tree)
+        // TODO : right_rotate(tree)
+        // TODO : left_right_rotate(tree)
+        // TODO : right_left_rotate(tree)
+        // TODO : balance_factor(tree)
+        
+        // bool is_balanced(node_type *node)
+        // {
+        //     if (node == NULL)
+        //         return true;
+        //     if (abs(balance_factor(node)) > 1)
+        //         return false;
+        //     return is_balanced(node->_left) && is_balanced(node->_right);
+        // }
+
+        // void balance(node_type &node)
+        // {
+        //     if (balance_factor(node) > 1)
+        //     {
+        //         if (balance_factor(node->_left) < 0)
+        //             left_rotate(node->_left);
+        //         right_rotate(node);
+        //     }
+        //     else if (balance_factor(node) < -1)
+        //     {
+        //         if (balance_factor(node->_right) > 0)
+        //             right_rotate(node->_right);
+        //         left_rotate(node);
+        //     }
+        // }
+
+        // void left_rotate(node_type &node)
+        // {
+        //     (void)node;
+        //     std::cout << "left_rotate" << std::endl;
+        // }
+        // void right_rotate(node_type &node)
+        // {
+        //     (void)node;
+        //     std::cout << "right_rotate" << std::endl;
+        // }
+        // void left_right_rotate(node_type &node)
+        // {
+        //     (void)node;
+        //     std::cout << "left_right_rotate" << std::endl;
+        // }
+        // void right_left_rotate(node_type &node)
+        // {
+        //     (void)node;
+        //     std::cout << "right_left_rotate" << std::endl;
+        // }
+
+
+
+        
+
     };
 } // namespace ft

@@ -5,6 +5,10 @@
 #include "../utils/pair.hpp"
 #include "../utils/make_pair.hpp"
 
+#define GREEN "\e[1;32m"
+#define DEFAULT "\e[0;37m"
+#define RED "\e[1;31m"
+
 // Internal node containing node references(left , right) and node data
 namespace ft
 {
@@ -93,7 +97,6 @@ namespace ft
         // ! end of private methods
         node_type *add(node_type *node, value_type value)
         {
-            std::cout << "add" << std::endl;
             if (node == NULL)
                 return (newNode(value));
 
@@ -142,7 +145,6 @@ namespace ft
             {
                 if (!node->_left && !node->_right)
                 {
-                    std::cout << "end" << std::endl;
                     _pair_allocator.destroy(node->_data);
                     _pair_allocator.deallocate(node->_data, 1);
                     _node_allocator.deallocate(node, 1);
@@ -263,15 +265,15 @@ namespace ft
             (void)last;
             if (node != nullptr)
             {
-                std::cout << indent;
+                std::cout  << RED << indent << DEFAULT;
                 if (last)
                 {
-                    std::cout << "R----";
+                    std::cout << GREEN << "R----" << DEFAULT;
                     indent += "   ";
                 }
                 else
                 {
-                    std::cout << "L----";
+                    std::cout << RED << "L----" << DEFAULT;
                     indent += "|  ";
                 }
                 std::cout << node->_data->first << std::endl;

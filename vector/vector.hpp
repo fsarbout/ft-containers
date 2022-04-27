@@ -477,8 +477,3 @@ std::ostream &operator<<(std::ostream &os, const ft::vector<T> &v)
         os << v[i] << " ";
     return os;
 }
-
-// TODO: swap : // ? quesition : what about swaping allocators ?
-
-// Returning a value also forces unnecessary trips through the object's copy constructor,
-//  costing you in performance.?

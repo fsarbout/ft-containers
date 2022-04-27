@@ -4,14 +4,20 @@
 #include <memory>
 #include "../utils/pair.hpp"
 #include "../utils/make_pair.hpp"
+#include "bidirectional_iterator.hpp"
 
 #define GREEN "\e[1;32m"
 #define DEFAULT "\e[0;37m"
 #define RED "\e[1;31m"
 
-// Internal node containing node references(left , right) and node data
+// * we will need node 
+
 namespace ft
 {
+    // * node class
+
+    // node will be used as internal data for map and tree, 
+    // each node contains its data and a pointer to left node and a pointer to right node
     template <typename T>
     class Node
     {
@@ -22,38 +28,36 @@ namespace ft
         Node<T> *_parent;
         int _height;
         int _balance_factor;
-
-        Node() : _data(NULL), _left(NULL), _right(NULL), _height(0), _balance_factor(0) {}
-
+        Node(){}
         ~Node() {}
-
-        // Node(T *data, Node<T> *right, Node<T> *left, Node<T> *parent) : _data(data), _left(left), _right(right), _parent(parent) {}
-
-        // T operator*() { return *this->_data; }
     };
 
+    // * avl_tree class
+
     template <class Key,                                            // map::key_type
-              class T,                                              // map::mapped_type
+              class Mapped_Type,                                              // map::mapped_type
               class Compare = std::less<Key>,                       // map::key_compare
-              class Alloc = std::allocator<ft::pair<const Key, T> > // map::allocator_type
+              class Alloc = std::allocator<ft::pair<const Key, Mapped_Type> > // map::allocator_type
               >
     class avl_tree
     {
     public:
-        typedef T mapped_type;
+        typedef Mapped_Type mapped_type;
         typedef Alloc allocator_type;
-        typedef Key key_type;
+        typedef Key key_type; 
         typedef ft::pair<const key_type, mapped_type> value_type;
         typedef Node<value_type> node_type;
         typedef typename Alloc::template rebind<node_type>::other node_allocator;
         typedef ptrdiff_t difference_type;
         typedef size_t size_type;
-        typedef Compare value_compare;
-        node_type *_root; // has to be public
+        node_type *_root;
+
+
+        typedef bidirectional_iterator<node_type, value_type> iterator;
 
     private:
         size_type _size;
-        value_compare _compare;
+        Compare _compare;
         allocator_type _pair_allocator;
         node_allocator _node_allocator;
 
@@ -196,9 +200,9 @@ namespace ft
 
     public:
         // constructor
-        avl_tree()  {  _root = NULL;  }
+        avl_tree() { _root = NULL; }
 
-        avl_tree(const avl_tree &other) : _root(NULL) { _root = copy(other._root);  }
+        avl_tree(const avl_tree &other) : _root(NULL) { _root = copy(other._root); }
 
         avl_tree &operator=(const avl_tree &other)
         {
@@ -221,7 +225,7 @@ namespace ft
             _root = NULL;
         }
 
-        bool exists(T elem) { return (__exists(_root, elem)); }
+        bool exists(mapped_type elem) { return (__exists(_root, elem)); }
 
         int height() const
         {
@@ -265,15 +269,15 @@ namespace ft
             (void)last;
             if (node != nullptr)
             {
-                std::cout  << RED << indent << DEFAULT;
+                std::cout << RED << indent << DEFAULT;
                 if (last)
                 {
-                    std::cout << GREEN << "R----" << DEFAULT;
+                    std::cout << GREEN << "R---- " << DEFAULT;
                     indent += "   ";
                 }
                 else
                 {
-                    std::cout << RED << "L----" << DEFAULT;
+                    std::cout << RED << "L---- " << DEFAULT;
                     indent += "|  ";
                 }
                 std::cout << node->_data->first << std::endl;
@@ -301,19 +305,20 @@ namespace ft
         // ! ****                           balance methods                                 ****
         // ! ***********************************************************************************
         // ! ***********************************************************************************
-        
+
         node_type *balance(node_type *node)
         {
             if (node->_balance_factor > 1)
             {
-                if (node->_left->_balance_factor > 0)
+                if (node->_left->_balance_factor >= 0)
                     return (right_rotate(node));
                 else
                     return (lr_rotate(node));
             }
+            // right heavy
             else if (node->_balance_factor < -1)
             {
-                if (node->_right->_balance_factor < 0)
+                if (node->_right->_balance_factor <= 0)
                     return (left_rotate(node));
                 else
                     return (rl_rotate(node));
@@ -323,6 +328,7 @@ namespace ft
 
         node_type *left_rotate(node_type *node)
         {
+            std::cout << "left rotate" << std::endl;
             node_type *tmp = node->_right;
             node->_right = tmp->_left;
             if (tmp->_left)
@@ -343,6 +349,7 @@ namespace ft
 
         node_type *right_rotate(node_type *node)
         {
+            std::cout << "right rotate" << std::endl;
             node_type *temp = node->_left;
             node->_left = temp->_right;
             if (temp->_right)
@@ -363,14 +370,59 @@ namespace ft
 
         node_type *lr_rotate(node_type *node)
         {
+            std::cout << "lr_rotate" << std::endl;
             node->_left = left_rotate(node->_left);
             return (right_rotate(node));
         }
 
         node_type *rl_rotate(node_type *node)
         {
+            std::cout << "rl_rotate" << std::endl;
             node->_right = right_rotate(node->_right);
             return (left_rotate(node));
+        }
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
+        // ! ****                           search  methods                                 ****
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
+
+        // search in tree
+        node_type *search(node_type *node, key_type key)
+        {
+            std::cout << "searching..." << std::endl;
+            if (node == NULL)
+                return NULL;
+            if (key == node->_data->first)
+                return node;
+            else
+                return (key < node->_data->first) ? search(node->_left, key) : search(node->_right, key);
+        }
+
+        // test search
+
+        // ! ********************* temp test *********************
+        node_type *looking(key_type key)
+        {
+            node_type *tmp = search(_root, key);
+            if (tmp)
+            {
+                std::cout << "found" << std::endl;
+                std::cout << tmp->_data->second << std::endl;
+            }
+            else
+                std::cout << "not found" << std::endl;
+            return tmp;
+        }
+
+        // return bidirectional iterator to the first element in the container.
+        // bidirectional iterators to node node 
+        // test increment of bidirectional iterator 
+        // test decrement of bidirectional iterator
+        
+        iterator test()
+        {
+            return iterator(_root);
         }
     };
 } // namespace ft

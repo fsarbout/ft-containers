@@ -2,7 +2,7 @@ NAME = ft_containers
 
 CC = c++
 
-CFLAGS = -Wall -Wextra -Werror -std=gnu++0x -std=c++98 -g 
+CFLAGS = -Wall -Wextra -Werror -std=gnu++0x -std=c++98 -g
 
 SRC = map/test.cpp\
 	

@@ -2,7 +2,6 @@
 
 #include <map>
 #include "../utils/pair.hpp"
-#include "../utils/less.hpp"
 
 namespace ft
 {
@@ -15,20 +14,24 @@ namespace ft
     class map
     {
     public:
-        // typedef ft::pair<const key_type, mapped_type> typedef Key key_type typedef T mapped_type typedef Compare key_compare typedef... value_compare typedef... allocator_type;
-        // typedef... reference;
-        // typedef... const_reference;
-        // typedef... pointer;
-        // typedef... const_pointer;
-        // typedef... iterator;
-        // typedef... const_iterator;
-        // typedef... reverse_iterator;
-        // typedef... const_reverse_iterator;
-        // typedef... difference_type;
-        // typedef... size_type;
-
-        
-
+        typedef Key                                     					key_type;
+        typedef T                                       					mapped_type;
+        typedef typename ft::pair<const key_type,mapped_type>       		value_type;
+        typedef Compare                                 					key_compare;
+        typedef Alloc                                   					allocator_type;
+        typedef value_type&                             					reference;
+        typedef const value_type&                       					const_reference;
+        typedef value_type*                             					pointer;
+        typedef const value_type*											const_pointer;
+        typedef typename ft::BBST<Key, T, Compare, Alloc> 					tree;
+        typedef ft::Node<value_type>                                		node_type;
+        typedef ft::const_bidirectional_iterator< node_type,  value_type>	const_iterator;
+        typedef ft::reverse_iterator<const_iterator>    					const_reverse_iterator;
+        typedef ft::bidirectional_iterator<node_type, value_type>   		iterator;
+        typedef ft::reverse_iterator<iterator>          					reverse_iterator;
+        typedef ptrdiff_t                               					difference_type;
+        typedef size_t                                  					size_type;
+ 
     private:
         // data
     public:

@@ -64,6 +64,8 @@ namespace ft
                      const allocator_type &alloc = allocator_type())
         {
             // Constructs an empty container, with no elements.
+            (void)comp;
+            (void)alloc;
             _size = 0;
             // _tree = tree(comp, alloc);
         }

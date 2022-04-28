@@ -205,7 +205,7 @@ Node *deleteNode(Node *root, int key)
 // Print the tree
 void printTree(Node *root, string indent, bool last)
 {
-  if (root != nullptr)
+  if (root != NULL)
   {
     cout << indent;
     if (last)

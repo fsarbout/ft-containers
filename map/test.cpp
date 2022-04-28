@@ -81,4 +81,6 @@ int main()
     // iterator
     ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int> > >::iterator it = map.begin();
 
+    std::cout << map[13] << std::endl;
+
 }

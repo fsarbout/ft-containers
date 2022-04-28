@@ -14,7 +14,7 @@
 
 namespace ft
 {
-    template <class T, class Alloc = std::allocator<T> >
+    template <class T, class Alloc = std::allocator<T>>
     class vector
     {
     public:
@@ -55,11 +55,11 @@ namespace ft
 
         template <class InputIterator>
         vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
-               typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL): 
+               typename ft::enable_if<!ft::is_integral<InputIterator>::value>::type *f = NULL) :
         {
             (void)f;
             (void)alloc;
-            _arr = nullptr;
+            _arr = NULL;
             _size = 0;
             _capacity = 0;
             reserve(last - first);

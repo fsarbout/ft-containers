@@ -5,6 +5,7 @@
 #include "../utils/pair.hpp"
 #include "../utils/make_pair.hpp"
 #include "bidirectional_iterator.hpp"
+#include <cstddef>
 
 #define GREEN "\e[1;32m"
 #define DEFAULT "\e[0;37m"
@@ -34,9 +35,9 @@ namespace ft
 
     // * avl_tree class
 
-    template <class Key,                                                      // map::key_type
-              class Mapped_Type,                                              // map::mapped_type
-              class Compare = std::less<Key>,                                 // map::key_compare
+    template <class Key,                                                     // map::key_type
+              class Mapped_Type,                                             // map::mapped_type
+              class Compare = std::less<Key>,                                // map::key_compare
               class Alloc = std::allocator<ft::pair<const Key, Mapped_Type> > // map::allocator_type
               >
     class avl_tree
@@ -266,7 +267,7 @@ namespace ft
         void printTree(node_type *node, std::string indent, bool last)
         {
             (void)last;
-            if (node != nullptr)
+            if (node != NULL)
             {
                 std::cout << RED << indent << DEFAULT;
                 if (last)

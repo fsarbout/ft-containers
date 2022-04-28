@@ -69,6 +69,7 @@
     "type_traits": "cpp",
     "typeinfo": "cpp",
     "memory_resource": "cpp",
-    "__functional_03": "cpp"
+    "__functional_03": "cpp",
+    "__cxx_version": "cpp"
   }
 }

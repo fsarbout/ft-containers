@@ -10,13 +10,13 @@
 #define DEFAULT "\e[0;37m"
 #define RED "\e[1;31m"
 
-// * we will need node 
+// * we will need node
 
 namespace ft
 {
     // * node class
 
-    // node will be used as internal data for map and tree, 
+    // node will be used as internal data for map and tree,
     // each node contains its data and a pointer to left node and a pointer to right node
     template <typename T>
     class Node
@@ -28,15 +28,15 @@ namespace ft
         Node<T> *_parent;
         int _height;
         int _balance_factor;
-        Node(){}
+        Node() {}
         ~Node() {}
     };
 
     // * avl_tree class
 
-    template <class Key,                                            // map::key_type
+    template <class Key,                                                      // map::key_type
               class Mapped_Type,                                              // map::mapped_type
-              class Compare = std::less<Key>,                       // map::key_compare
+              class Compare = std::less<Key>,                                 // map::key_compare
               class Alloc = std::allocator<ft::pair<const Key, Mapped_Type> > // map::allocator_type
               >
     class avl_tree
@@ -44,14 +44,13 @@ namespace ft
     public:
         typedef Mapped_Type mapped_type;
         typedef Alloc allocator_type;
-        typedef Key key_type; 
+        typedef Key key_type;
         typedef ft::pair<const key_type, mapped_type> value_type;
         typedef Node<value_type> node_type;
         typedef typename Alloc::template rebind<node_type>::other node_allocator;
         typedef ptrdiff_t difference_type;
         typedef size_t size_type;
         node_type *_root;
-
 
         typedef bidirectional_iterator<node_type, value_type> iterator;
 
@@ -173,7 +172,7 @@ namespace ft
 
                 else
                 {
-                    node_type *tmp = min_node(node->_right);
+                    node_type *tmp = _min(node->_right);
                     std::swap(node->_data, tmp->_data);
                     node->_right = remove(node->_right, key);
                 }
@@ -247,20 +246,20 @@ namespace ft
             return false;
         }
 
-        node_type *max_node(node_type *node)
-        {
-            if (node->_right == NULL)
-                return node;
-            else
-                return max_node(node->_right);
-        }
+        // node_type *_max(node_type *node)
+        // {
+        //     if (node->_right == NULL)
+        //         return node;
+        //     else
+        //         return _max(node->_right);
+        // }
 
-        node_type *min_node(node_type *node)
+        node_type *_min(node_type *node)
         {
             if (node->_left == NULL)
                 return node;
             else
-                return min_node(node->_left);
+                return _min(node->_left);
         }
 
         // ! print tree
@@ -295,6 +294,7 @@ namespace ft
         {
             if (!exists(key))
                 return false;
+            std::cout << "removing " << key << std::endl;
             _root = remove(_root, key);
             _size--;
             return true;
@@ -328,7 +328,6 @@ namespace ft
 
         node_type *left_rotate(node_type *node)
         {
-            std::cout << "left rotate" << std::endl;
             node_type *tmp = node->_right;
             node->_right = tmp->_left;
             if (tmp->_left)
@@ -349,7 +348,6 @@ namespace ft
 
         node_type *right_rotate(node_type *node)
         {
-            std::cout << "right rotate" << std::endl;
             node_type *temp = node->_left;
             node->_left = temp->_right;
             if (temp->_right)
@@ -370,14 +368,12 @@ namespace ft
 
         node_type *lr_rotate(node_type *node)
         {
-            std::cout << "lr_rotate" << std::endl;
             node->_left = left_rotate(node->_left);
             return (right_rotate(node));
         }
 
         node_type *rl_rotate(node_type *node)
         {
-            std::cout << "rl_rotate" << std::endl;
             node->_right = right_rotate(node->_right);
             return (left_rotate(node));
         }
@@ -390,13 +386,33 @@ namespace ft
         // search in tree
         node_type *search(node_type *node, key_type key)
         {
-            std::cout << "searching..." << std::endl;
             if (node == NULL)
                 return NULL;
             if (key == node->_data->first)
                 return node;
             else
                 return (key < node->_data->first) ? search(node->_left, key) : search(node->_right, key);
+        }
+
+        // ! min max
+
+        node_type *min_node(node_type *node)
+        {
+            if (node == NULL)
+                return (node);
+            while (node->_left != NULL)
+                node = node->_left;
+            return (node);
+        }
+
+        // the max node of the given tree
+        node_type *max_node(node_type *node)
+        {
+            if (node == NULL)
+                return (node);
+            while (node->_right != NULL)
+                node = node->_right;
+            return (node);
         }
 
         // test search
@@ -415,14 +431,6 @@ namespace ft
             return tmp;
         }
 
-        // return bidirectional iterator to the first element in the container.
-        // bidirectional iterators to node node 
-        // test increment of bidirectional iterator 
-        // test decrement of bidirectional iterator
-        
-        iterator test()
-        {
-            return iterator(_root);
-        }
+        // test bidirectional iterator
     };
 } // namespace ft

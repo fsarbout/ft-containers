@@ -1,8 +1,8 @@
 #pragma once
 
 #include <iterator>
-
 #include "../vector/iterator.hpp"
+
 namespace ft
 {
     template <class Iterator>

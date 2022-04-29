@@ -68,17 +68,9 @@ int main()
     tree.print_it(tree);
 
     // ! tmp tests   
-    // tree.looking(13);
 
-    // tree.remove(pair.first);
     tree.remove(pair7  .first);
     std::cout << "tree height: " << tree.height() << std::endl << std::endl;
     tree.print_it(tree);
-    // tree.remove(pair5.first);
-
-    ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int> > > map;
-    // map.insert(pair);
-    // iterator
-    ft::map<int, int, std::less<int>, std::allocator<ft::pair<const int, int> > >::iterator it = map.begin();
 
 }

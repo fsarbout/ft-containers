@@ -4,7 +4,7 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=gnu++0x -std=c++98 -g
 
-SRC = map/test.cpp\
+SRC = map/map_test.cpp\
 	
 all : $(NAME)
 

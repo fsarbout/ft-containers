@@ -7,12 +7,16 @@ namespace ft
     {
     public:
         typedef Node *node_pointer;
-        typedef Pair *pair_pointer;
+        typedef Pair *pair_pointer; // more readable
+        typedef Pair *pointer;      // for iterator traits
+        typedef Pair &reference;    // for iterator traits
+
         typedef Pair value_type;
         typedef Pair &pair_reference;
         node_pointer _node;
         typedef std::bidirectional_iterator_tag iterator_category;
         node_pointer *_root;
+        typedef std::ptrdiff_t difference_type;
 
         bidirectional_iterator() : _node(NULL), _root(NULL) {}
 
@@ -65,6 +69,7 @@ namespace ft
                 while (_node->_left)
                     _node = _node->_left;
             }
+            return *this;
         }
 
         bidirectional_iterator operator++(int)
@@ -97,6 +102,7 @@ namespace ft
                 while (_node->_right)
                     _node = _node->_right;
             }
+            return *this;
         }
 
         bidirectional_iterator operator--(int)
@@ -125,9 +131,15 @@ namespace ft
     public:
         typedef Node *node_pointer;
         typedef Pair *pair_pointer;
+        typedef Pair *pointer;   // for iterator traits
+        typedef Pair &reference; // for iterator traits
         typedef std::bidirectional_iterator_tag iterator_category;
         typedef Pair value_type;
         typedef Pair &pair_reference;
+        typedef std::ptrdiff_t difference_type;
+        typedef ft::bidirectional_iterator<Node, Pair> bidirectional_iterator;
+        
+
 
     private:
         node_pointer _node;
@@ -143,7 +155,13 @@ namespace ft
             *this = other;
         }
 
-        const_bidirectional_iterator &operator=(const const_bidirectional_iterator &other)
+        const_bidirectional_iterator(const bidirectional_iterator &other)
+        {
+            this->_node = other._node;
+            this->_root = other._root;
+        }
+
+        const_bidirectional_iterator &operator=(const bidirectional_iterator &other)
         {
             _node = other._node;
             _root = other._root;
@@ -158,7 +176,7 @@ namespace ft
         }
 
         pair_pointer operator->() const
-        {
+        { 
             return _node->_data;
         }
 
@@ -240,4 +258,8 @@ namespace ft
             return (_node != other._node);
         }
     };
+
+ 
+
+
 }

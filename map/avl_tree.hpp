@@ -203,14 +203,32 @@ namespace ft
 
         avl_tree(const avl_tree &other) : _root(NULL) { _root = copy(other._root); }
 
+        // avl_tree &operator=(const avl_tree &other)
+        // {
+        //     if (this != &other)
+        //     {
+        //         clear();
+        //         _root = copy(other._root);
+        //     }
+        //     return *this;
+        // }
+
         avl_tree &operator=(const avl_tree &other)
         {
-            if (this != &other)
-            {
-                clear();
-                _root = copy(other._root);
-            }
+            clear();
+            node_type *tmp = other._root;
+           copy(tmp);
             return *this;
+        }
+
+        void copy(node_type *node)
+        {
+            if (node != NULL)
+            {
+                insert(*(node->_data));
+                copy(node->_left);
+                copy(node->_right);
+            }
         }
 
         ~avl_tree()
@@ -220,8 +238,19 @@ namespace ft
 
         void clear()
         {
-            // clear(_root);
-            _root = NULL;
+            freee(_root);
+        }
+
+        void freee(node_type *node)
+        {
+            if (node)
+            {
+                freee(node->_left);
+                freee(node->_right);
+                _pair_allocator.destroy(node->_data);
+                _pair_allocator.deallocate(node->_data, 1);
+                _node_allocator.deallocate(node, 1);
+            }
         }
 
         bool exists(mapped_type elem) { return (__exists(_root, elem)); }
@@ -386,7 +415,7 @@ namespace ft
         // search in tree
         node_type *search(node_type *node, key_type key)
         {
-            if (node == NULL)
+            if (!node)
                 return NULL;
             if (key == node->_data->first)
                 return node;
@@ -434,3 +463,32 @@ namespace ft
         // test bidirectional iterator
     };
 } // namespace ft
+
+// TODO: constructors
+// TODO: destructor
+// TODO: operator =
+// TODO: begin()
+// TODO: rbegin()
+// TODO: end()
+// TODO: rend()
+// TODO: empty() // * done
+// TODO: size() // * done
+// TODO: max_size() // * done
+// TODO: operator[]
+// TODO: insert()
+// TODO: erase()
+// TODO: swap()
+// TODO: clear()
+//
+// TODO: key_comp()
+// TODO: value_comp()
+//
+// TODO: find()
+// TODO: count()
+// TODO: lower_bound()
+// TODO: upper_bound()
+// TODO: equal_range()
+//
+// TODO: get_allocator() // * done
+
+//

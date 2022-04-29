@@ -204,6 +204,9 @@ namespace ft
 
         avl_tree(const avl_tree &other) : _root(NULL) { _root = copy(other._root); }
 
+        // constructor with compare and allocator
+        avl_tree(const Compare &comp, const allocator_type &alloc) : _root(NULL), _compare(comp), _pair_allocator(alloc), _node_allocator(alloc) {}
+
         // avl_tree &operator=(const avl_tree &other)
         // {
         //     if (this != &other)
@@ -461,35 +464,18 @@ namespace ft
             return tmp;
         }
 
+    // !
+        bool empty() const
+        {
+            return (_size == 0);
+        }
+
+        // size of tree
+        size_type size() const
+        {
+            return _size;
+        }
+
         // test bidirectional iterator
     };
 } // namespace ft
-
-// TODO: constructors
-// TODO: destructor
-// TODO: operator =
-// TODO: begin()
-// TODO: rbegin()
-// TODO: end()
-// TODO: rend()
-// TODO: empty() // * done
-// TODO: size() // * done
-// TODO: max_size() // * done
-// TODO: operator[]
-// TODO: insert()
-// TODO: erase()
-// TODO: swap()
-// TODO: clear()
-//
-// TODO: key_comp()
-// TODO: value_comp()
-//
-// TODO: find()
-// TODO: count()
-// TODO: lower_bound()
-// TODO: upper_bound()
-// TODO: equal_range()
-//
-// TODO: get_allocator() // * done
-
-//

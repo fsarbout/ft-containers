@@ -150,18 +150,19 @@ namespace ft
 
         const_bidirectional_iterator(node_pointer node, node_pointer *root) : _node(node), _root(root) {}
 
+        const_bidirectional_iterator(Node node, node_pointer root) : _node(node), _root(root) {}
+
+        const_bidirectional_iterator(const bidirectional_iterator &other)
+        {
+            *this = other;
+        }
+
         const_bidirectional_iterator(const const_bidirectional_iterator &other)
         {
             *this = other;
         }
 
-        const_bidirectional_iterator(const bidirectional_iterator &other)
-        {
-            this->_node = other._node;
-            this->_root = other._root;
-        }
-
-        const_bidirectional_iterator &operator=(const bidirectional_iterator &other)
+        const_bidirectional_iterator &operator=(const const_bidirectional_iterator &other)
         {
             _node = other._node;
             _root = other._root;

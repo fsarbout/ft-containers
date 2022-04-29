@@ -73,4 +73,6 @@ int main()
     std::cout << "tree height: " << tree.height() << std::endl << std::endl;
     tree.print_it(tree);
 
+    std::cout << map[13] << std::endl;
+
 }

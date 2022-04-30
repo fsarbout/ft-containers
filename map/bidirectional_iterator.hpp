@@ -123,6 +123,11 @@ namespace ft
         {
             return (_node != other._node);
         }
+
+        operator ft::bidirectional_iterator<Node, const Pair>()
+        {
+            return ft::bidirectional_iterator<Node, const Pair>(_node, _root);
+        }
     };
 
     template <typename Node, typename Pair>
@@ -138,8 +143,6 @@ namespace ft
         typedef Pair &pair_reference;
         typedef std::ptrdiff_t difference_type;
         typedef ft::bidirectional_iterator<Node, Pair> bidirectional_iterator;
-        
-
 
     private:
         node_pointer _node;
@@ -177,7 +180,7 @@ namespace ft
         }
 
         pair_pointer operator->() const
-        { 
+        {
             return _node->_data;
         }
 
@@ -258,9 +261,11 @@ namespace ft
         {
             return (_node != other._node);
         }
+
+        operator ft::bidirectional_iterator<Node, const Pair>()
+        {
+            return ft::bidirectional_iterator<Node, const Pair>(_node, _root);
+        }
     };
-
- 
-
 
 }

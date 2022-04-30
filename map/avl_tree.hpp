@@ -33,11 +33,21 @@ namespace ft
         ~Node() {}
     };
 
+    template <class T>
+    Node<T> *min_node(Node<T> *node)
+    {
+        if (node == NULL)
+            return (node);
+        while (node->_left != NULL)
+            node = node->_left;
+        return (node);
+    }
+
     // * avl_tree class
 
-    template <class Key,                                                     // map::key_type
-              class Mapped_Type,                                             // map::mapped_type
-              class Compare = std::less<Key>,                                // map::key_compare
+    template <class Key,                                                      // map::key_type
+              class Mapped_Type,                                              // map::mapped_type
+              class Compare = std::less<Key>,                                 // map::key_compare
               class Alloc = std::allocator<ft::pair<const Key, Mapped_Type> > // map::allocator_type
               >
     class avl_tree
@@ -79,7 +89,7 @@ namespace ft
             return (_compare(key1, key2) == false && _compare(key2, key1) == false);
         }
 
-        bool __exists(node_type *node, mapped_type elem) const
+        bool __exists(node_type *node, key_type elem) const
         {
             // reached the end of the tree, value not found
             if (node == NULL)
@@ -202,7 +212,10 @@ namespace ft
         // constructor
         avl_tree() { _root = NULL; }
 
-        avl_tree(const avl_tree &other) : _root(NULL) { _root = copy(other._root); }
+        avl_tree(const avl_tree &other) : _root(NULL), _size(other._size)
+        {
+            *this = other;
+        }
 
         // constructor with compare and allocator
         avl_tree(const Compare &comp, const allocator_type &alloc) : _root(NULL), _compare(comp), _pair_allocator(alloc), _node_allocator(alloc) {}
@@ -221,7 +234,7 @@ namespace ft
         {
             clear();
             node_type *tmp = other._root;
-           copy(tmp);
+            copy(tmp);
             return *this;
         }
 
@@ -257,7 +270,7 @@ namespace ft
             }
         }
 
-        bool exists(mapped_type elem) { return (__exists(_root, elem)); }
+        bool exists(key_type elem) { return (__exists(_root, elem)); }
 
         int height() const
         {
@@ -417,7 +430,7 @@ namespace ft
         // ! ***********************************************************************************
 
         // search in tree
-        node_type *search(node_type *node, key_type key)
+        node_type *search(node_type *node, key_type key) const
         {
             if (!node)
                 return NULL;
@@ -429,14 +442,14 @@ namespace ft
 
         // ! min max
 
-        node_type *min_node(node_type *node)
-        {
-            if (node == NULL)
-                return (node);
-            while (node->_left != NULL)
-                node = node->_left;
-            return (node);
-        }
+        // node_type *min_node(node_type *node)
+        // {
+        //     if (node == NULL)
+        //         return (node);
+        //     while (node->_left != NULL)
+        //         node = node->_left;
+        //     return (node);
+        // }
 
         // the max node of the given tree
         node_type *max_node(node_type *node)
@@ -464,7 +477,7 @@ namespace ft
             return tmp;
         }
 
-    // !
+        // !
         bool empty() const
         {
             return (_size == 0);
@@ -476,6 +489,38 @@ namespace ft
             return _size;
         }
 
-        // test bidirectional iterator
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
+        // ! ****                            operation methods                              ****
+        // ! ***********************************************************************************
+        // ! ***********************************************************************************
+        
+        // find
+
+
+
+
+
+        //  lower bound
+        node_type *lower_bound(node_type *node, key_type key)
+        {
+            if (!node)
+                return NULL;
+            if (key == node->_data->first)
+                return node;
+            else if (key < node->_data->first)
+                return lower_bound(node->_left, key);
+            else
+            {
+                node_type *tmp = lower_bound(node->_right, key);
+                if (tmp)
+                    return tmp;
+                else
+                    return node;
+            }
+        }
+
+
     };
+
 } // namespace ft

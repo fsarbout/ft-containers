@@ -1,5 +1,4 @@
 #pragma once
-
 #include <iostream>
 #include <memory>
 #include "../utils/pair.hpp"
@@ -52,30 +51,26 @@ namespace ft
     template <class T>
     Node<T> *increment(Node<T> *node, Node<T> *root)
     {
-        if (node == NULL)
-        {
-            node = root;
-
-            while (node->_left != NULL)
-                node = node->_left;
-        }
+        if (!node)
+            node = min_node(root);
         else
         {
-            if (node->_right != NULL)
+            if (node->_right)
             {
                 node = node->_right;
-                while (node->_left != NULL)
+                while (node->_left)
                     node = node->_left;
             }
             else
             {
-                Node<T> *temp = node->_parent;
-                while (temp != NULL && node == temp->_right)
+                Node<T> *tmp = node->_parent;
+
+                while (tmp && node == tmp->_right)
                 {
-                    node = temp;
-                    temp = temp->_parent;
+                    node = tmp;
+                    tmp = tmp->_parent;
                 }
-                node = temp;
+                node = tmp;
             }
         }
         return (node);
@@ -84,38 +79,33 @@ namespace ft
     template <class T>
     Node<T> *decrement(Node<T> *node, Node<T> *root)
     {
-        if (node == NULL)
-        {
+        if (!node)
             node = max_node(root);
+        else if (node->_left)
+        {
+            node = node->_left;
+            while (node->_right)
+                node = node->_right;
         }
         else
         {
-            if (node->_left != NULL)
+            Node<T> *tmp = node->_parent;
+            while (tmp && node == tmp->_left)
             {
-                node = node->_left;
-                while (node->_right != NULL)
-                    node = node->_right;
+                node = tmp;
+                tmp = tmp->_parent;
             }
-            else
-            {
-                Node<T> *temp = node->_parent;
-                while (temp != NULL && node == temp->_left)
-                {
-                    node = temp;
-                    temp = temp->_parent;
-                }
-                node = temp;
-            }
+            node = tmp;
         }
         return (node);
     }
 
     // * avl_tree class
 
-    template <class Key,                                                     // map::key_type
-              class Mapped_Type,                                             // map::mapped_type
-              class Compare = std::less<Key>,                                // map::key_compare
-              class Alloc = std::allocator<ft::pair<const Key, Mapped_Type>> // map::allocator_type
+    template <class Key,                                                      // map::key_type
+              class Mapped_Type,                                              // map::mapped_type
+              class Compare = std::less<Key>,                                 // map::key_compare
+              class Alloc = std::allocator<ft::pair<const Key, Mapped_Type> > // map::allocator_type
               >
     class avl_tree
     {
@@ -181,21 +171,18 @@ namespace ft
             if (node == NULL)
                 return (newNode(value));
 
-            else if (value.first < node->_data->first)
+            else if (_compare(value.first, node->_data->first))
             {
                 node->_left = add(node->_left, value);
                 node->_left->_parent = node;
             }
-            else if (value.first > node->_data->first)
+            else if (_compare(node->_data->first, value.first))
             {
                 node->_right = add(node->_right, value);
                 node->_right->_parent = node;
             }
-            else
-                node->_data->second = value.second;
             update(node);
             return balance(node);
-            // return node;
         }
 
         // allocate a new node
@@ -261,12 +248,13 @@ namespace ft
 
         void update(node_type *node)
         {
-            if (node == NULL)
-                return;
-            node->_height = 1 + std::max(height(node->_left), height(node->_right));
-            node->_balance_factor = height(node->_left) - height(node->_right);
-            update(node->_left);
-            update(node->_right);
+            if (node != NULL)
+            {
+                int leftnode = (node->_left == NULL) ? -1 : node->_left->_height;
+                int rightnode = (node->_right == NULL) ? -1 : node->_right->_height;
+                node->_height = std::max(leftnode, rightnode) + 1;
+                node->_balance_factor = rightnode - leftnode;
+            }
         }
 
         // ! ***********************************************************************************
@@ -277,7 +265,7 @@ namespace ft
 
     public:
         // constructor
-        avl_tree() { _root = NULL; }
+        avl_tree() : _root(NULL), _size(0), _compare(), _pair_allocator(), _node_allocator() {}
 
         avl_tree(const avl_tree &other) : _root(NULL), _size(other._size)
         {
@@ -287,15 +275,6 @@ namespace ft
         // constructor with compare and allocator
         avl_tree(const Compare &comp, const allocator_type &alloc) : _root(NULL), _compare(comp), _pair_allocator(alloc), _node_allocator(alloc) {}
 
-        // avl_tree &operator=(const avl_tree &other)
-        // {
-        //     if (this != &other)
-        //     {
-        //         clear();
-        //         _root = copy(other._root);
-        //     }
-        //     return *this;
-        // }
 
         avl_tree &operator=(const avl_tree &other)
         {
@@ -337,7 +316,7 @@ namespace ft
             }
         }
 
-        bool exists(key_type elem) { return (__exists(_root, elem)); }
+        bool exists(key_type elem) const { return (__exists(_root, elem)); }
 
         int height() const
         {
@@ -345,8 +324,6 @@ namespace ft
                 return 0;
             return _root->_height;
         }
-
-        // return true if the element is added successfully.
 
         bool insert(value_type elem)
         {
@@ -359,20 +336,18 @@ namespace ft
             return false;
         }
 
-        // node_type *_max(node_type *node)
-        // {
-        //     if (node->_right == NULL)
-        //         return node;
-        //     else
-        //         return _max(node->_right);
-        // }
-
-        node_type *_min(node_type *node)
+        node_type *_max(node_type *node) const
         {
-            if (node->_left == NULL)
-                return node;
-            else
-                return _min(node->_left);
+            while (node && node->_right)
+                node = node->_right;
+            return node;
+        }
+
+        node_type *_min(node_type *node) const
+        {
+            while (node->_left)
+                node = node->_left;
+            return node;
         }
 
         // ! print tree
@@ -407,7 +382,7 @@ namespace ft
         {
             if (!exists(key))
                 return false;
-            std::cout << "removing " << key << std::endl;
+            // std::cout << "removing " << key << std::endl;
             _root = remove(_root, key);
             _size--;
             return true;
@@ -421,17 +396,17 @@ namespace ft
 
         node_type *balance(node_type *node)
         {
-            if (node->_balance_factor > 1)
+            if (node->_balance_factor == -2)
             {
-                if (node->_left->_balance_factor >= 0)
+                if (node->_left->_balance_factor <= 0)
                     return (right_rotate(node));
                 else
                     return (lr_rotate(node));
             }
             // right heavy
-            else if (node->_balance_factor < -1)
+            else if (node->_balance_factor == 2)
             {
-                if (node->_right->_balance_factor <= 0)
+                if (node->_right->_balance_factor >= 0)
                     return (left_rotate(node));
                 else
                     return (rl_rotate(node));
@@ -504,28 +479,14 @@ namespace ft
             if (key == node->_data->first)
                 return node;
             else
-                return (key < node->_data->first) ? search(node->_left, key) : search(node->_right, key);
-        }
-
-        // ! min max
-
-        // node_type *min_node(node_type *node)
-        // {
-        //     if (node == NULL)
-        //         return (node);
-        //     while (node->_left != NULL)
-        //         node = node->_left;
-        //     return (node);
-        // }
-
-        // the max node of the given tree
-        node_type *max_node(node_type *node)
-        {
-            if (node == NULL)
-                return (node);
-            while (node->_right != NULL)
-                node = node->_right;
-            return (node);
+            {
+                if (_compare(key, node->_data->first))
+                    return search(node->_left, key);
+                else
+                    return search(node->_right, key);
+            }
+            //
+            // return node;
         }
 
         // test search
@@ -562,25 +523,70 @@ namespace ft
         // ! ***********************************************************************************
         // ! ***********************************************************************************
 
-        // find
+        // susscessor is the next node in the tree to the given node a < b < c < d < e < f < g , b succesor is c
+        node_type *successor(node_type *node) const
+        {
+            if (node->_right)
+                return _min(node->_right);
+            node_type *tmp = node->_parent;
+            // for (; tmp && node == tmp->_right; node = tmp, tmp = tmp->_parent)
+            //     ;
+            while (tmp && node == tmp->_right)
+            {
+                node = tmp;
+                tmp = tmp->_parent;
+            }
+            return tmp;
+        }
 
-        //  lower bound
+        // create a function that returns the node with the smallest key >= key, using min_node() method
         node_type *lower_bound(node_type *node, key_type key)
         {
-            if (!node)
-                return NULL;
-            if (key == node->_data->first)
-                return node;
-            else if (key < node->_data->first)
-                return lower_bound(node->_left, key);
-            else
+            node_type *tmp = min_node(node);
+            while (tmp)
             {
-                node_type *tmp = lower_bound(node->_right, key);
-                if (tmp)
+                if (tmp->_data->first >= key)
                     return tmp;
-                else
-                    return node;
+                tmp = successor(tmp);
             }
+            return NULL;
+        }
+
+        // const lower bound
+        node_type *lower_bound(node_type *node, key_type key) const
+        {
+            node_type *tmp = min_node(node);
+            while (tmp)
+            {
+                if (tmp->_data->first >= key)
+                    return tmp;
+                tmp = successor(tmp);
+            }
+            return NULL;
+        }
+
+        node_type *upper_bound(node_type *node, key_type key)
+        {
+            node_type *tmp = min_node(node);
+            while (tmp)
+            {
+                if (tmp->_data->first > key)
+                    return tmp;
+                tmp = successor(tmp);
+            }
+            return NULL;
+        }
+
+        node_type *upper_bound(node_type *node, key_type key) const
+        {
+            node_type *tmp = min_node(node);
+            while (tmp)
+            {
+                if (tmp->_data->first > key)
+                    return tmp;
+                tmp = successor(tmp);
+            }
+            return NULL;
         }
     };
 

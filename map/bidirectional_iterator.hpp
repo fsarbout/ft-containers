@@ -18,6 +18,10 @@ namespace ft
         node_pointer *_root;
         typedef std::ptrdiff_t difference_type;
 
+        // tmp test
+        // bidirectional_iterator(node_pointer node, node_pointer root) : _node(node), _root(root) {}
+        // 
+
         bidirectional_iterator() : _node(NULL), _root(NULL) {}
 
         bidirectional_iterator(node_pointer node, node_pointer *root) : _node(node), _root(root) {}
@@ -38,7 +42,7 @@ namespace ft
 
         pair_reference operator*() const
         {
-            return *_node->_data;
+            return (*(_node->_data));
         }
 
         pair_pointer operator->() const
@@ -54,10 +58,15 @@ namespace ft
 
         bidirectional_iterator operator++(int)
         {
-            bidirectional_iterator tmp = *this;
-            ++*this;
-            return tmp;
+      	    bidirectional_iterator tmp = *this;
+			_node = increment(_node, *_root);
+			return tmp;
         }
+
+
+
+
+        
 
         bidirectional_iterator &operator--()
         {
@@ -68,7 +77,7 @@ namespace ft
         bidirectional_iterator operator--(int)
         {
             bidirectional_iterator tmp = *this;
-            --*this;
+            _node = decrement(_node, *_root);
             return tmp;
         }
 
@@ -113,7 +122,13 @@ namespace ft
 
         const_bidirectional_iterator(node_pointer node, node_pointer *root) : _node(node), _root(root) {}
 
-        const_bidirectional_iterator(Node node, node_pointer root) : _node(node), _root(root) {}
+        // const_bidirectional_iterator(Node node, node_pointer root) : _node(node), _root(root) {}
+
+        // tmp test
+        // const_bidirectional_iterator(node_pointer node, node_pointer root) : _node(node), _root(root) {}
+        
+        // 
+
 
         const_bidirectional_iterator(const bidirectional_iterator &other)
         {
@@ -169,7 +184,7 @@ namespace ft
         const_bidirectional_iterator operator--(int)
         {
             const_bidirectional_iterator tmp = *this;
-            --*this;
+            _node = decrement(_node, *_root);
             return tmp;
         }
 

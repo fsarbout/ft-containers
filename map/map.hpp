@@ -6,6 +6,8 @@
 #include "avl_tree.hpp"
 #include "../iterators/iterator_traits.hpp"
 #include "../utils/equal.hpp"
+#include "../vector/vector.hpp"
+#include <vector>
 
 namespace ft
 {
@@ -60,20 +62,19 @@ namespace ft
     public:
         // ! empty constructor
         explicit map(const key_compare &comp = key_compare(),
-                     const allocator_type &alloc = allocator_type())
+                     const allocator_type &alloc = allocator_type()) : _tree(), _compare(comp), _allocator(alloc)
         {
-            _tree = tree(comp, alloc);
         }
 
         // ! range constructor
         template <class InputIterator>
-        map(InputIterator first, InputIterator last,
-            const key_compare &comp = key_compare(),
-            const allocator_type &alloc = allocator_type()) : _compare(comp), _allocator(alloc)
+        map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(),
+            const allocator_type &alloc = allocator_type()) : _tree(), _compare(comp), _allocator(alloc)
         {
-            for (; first != last; ++first)
+            while (first != last)
             {
                 insert(*first);
+                ++first;
             }
         }
 
@@ -182,34 +183,33 @@ namespace ft
         // ! insert single element
         pair<iterator, bool> insert(const value_type &val)
         {
-            // std::cout << "inserted successfully" << std::endl;
             ft::pair<key_type, mapped_type> p = ft::make_pair(val.first, val.second);
-            _tree.insert(p);
             node_type *tmp = _tree.search(_tree._root, val.first);
-            return (pair<iterator, bool>(iterator(tmp, const_cast<node_type **>(&_tree._root)), true));
+            if (tmp == NULL)
+            {
+                _tree.insert(p);
+                tmp = _tree.search(_tree._root, val.first);
+                return (pair<iterator, bool>(iterator(tmp, const_cast<node_type **>(&_tree._root)), true));
+            }
+            else
+            {
+                return (pair<iterator, bool>(iterator(tmp, const_cast<node_type **>(&_tree._root)), false));
+            }
         }
 
         // ! insert with hint
         iterator insert(iterator position, const value_type &val)
         {
             (void)position;
-            // std::cout << "inserted 1 successfully" << std::endl;
-            ft::pair<key_type, mapped_type> p = ft::make_pair(val.first, val.second);
-            _tree.insert(p);
-            node_type *tmp = _tree.search(_tree._root, val.first);
-            return (iterator(tmp, const_cast<node_type **>(&_tree._root)));
+            return (this->insert(val).first);
         }
 
         // ! insert range
         template <class InputIterator>
         void insert(InputIterator first, InputIterator last)
         {
-            // std::cout << "inserted 2 successfully" << std::endl;
             for (; first != last; ++first)
-            {
-                ft::pair<key_type, mapped_type> p = ft::make_pair(first->first, first->second);
-                _tree.insert(p);
-            }
+                this->insert(*first);
         }
 
         // ! erase
@@ -226,9 +226,15 @@ namespace ft
 
         void erase(iterator first, iterator last)
         {
-            for (; first != last; ++first)
+            ft::vector<key_type> v_tmp;
+            while (first != last)
             {
-                erase(first);
+                v_tmp.push_back(first->first);
+                ++first;
+            }
+            for (typename ft::vector<key_type>::iterator it = v_tmp.begin(); it != v_tmp.end(); ++it)
+            {
+                erase(*it);
             }
         }
 
@@ -241,7 +247,10 @@ namespace ft
         }
 
         // ! clear
-        void clear() {}
+        void clear()
+        {
+            _tree.clear();
+        }
 
         // ! key compare
         key_compare key_comp() const
@@ -259,13 +268,17 @@ namespace ft
         iterator find(const key_type &k)
         {
             node_type *tmp = _tree.search(_tree._root, k);
-            return (iterator(tmp, const_cast<node_type **>(&_tree._root)));
+            if (tmp != NULL)
+                return iterator(tmp, &_tree._root);
+            return (end());
         }
 
         const_iterator find(const key_type &k) const
         {
             node_type *tmp = _tree.search(_tree._root, k);
-            return (const_iterator(tmp, const_cast<node_type **>(&_tree._root)));
+            if (tmp != NULL)
+                return const_iterator(tmp, const_cast<node_type **>(&_tree._root));
+            return (end());
         }
 
         // ! count
@@ -276,7 +289,6 @@ namespace ft
                 return (0);
             return (1);
         }
-
 
         // ! get allocator
         allocator_type get_allocator() const
@@ -295,32 +307,38 @@ namespace ft
         // ! ***********************************************************************************
         // ! ***********************************************************************************
 
-        // ! not working (for tester only)
-        // ! lower bound
+        // **** test behavior only
         iterator lower_bound(const key_type &k)
         {
-            node_type *tmp = _tree.search(_tree._root, k);
-            return (iterator(tmp, const_cast<node_type **>(&_tree._root)));
-        }
 
+            node_type *tmp = _tree.lower_bound(_tree._root, k);
+            if (tmp != NULL)
+                return iterator(tmp, &_tree._root);
+            return (end());
+        }
 
         const_iterator lower_bound(const key_type &k) const
         {
-            node_type *tmp = _tree.search(_tree._root, k);
-            return (const_iterator(tmp, const_cast<node_type **>(&_tree._root)));
+            node_type *tmp = _tree.lower_bound(_tree._root, k);
+            if (tmp != NULL)
+                return const_iterator(tmp, const_cast<node_type **>(&_tree._root));
+            return (end());
         }
 
-        // ! upper bound
         iterator upper_bound(const key_type &k)
         {
-            node_type *tmp = _tree.search(_tree._root, k);
-            return (iterator(tmp, const_cast<node_type **>(&_tree._root)));
+            node_type *tmp = _tree.upper_bound(_tree._root, k);
+            if (tmp != NULL)
+                return iterator(tmp, &_tree._root);
+            return (end());
         }
 
         const_iterator upper_bound(const key_type &k) const
         {
-            node_type *tmp = _tree.search(_tree._root, k);
-            return (const_iterator(tmp, const_cast<node_type **>(&_tree._root)));
+            node_type *tmp = _tree.upper_bound(_tree._root, k);
+            if (tmp != NULL)
+                return const_iterator(tmp, const_cast<node_type **>(&_tree._root));
+            return (end());
         }
 
         // ! equal range
@@ -374,7 +392,6 @@ namespace ft
         return !(lhs < rhs);
     }
 
-    // swap
     template <class Key, class T, class Compare, class Alloc>
     void swap(ft::map<Key, T, Compare, Alloc> &lhs, ft::map<Key, T, Compare, Alloc> &rhs)
     {
@@ -383,15 +400,6 @@ namespace ft
 
 }
 
-// TODO: key_comp()
-// TODO: value_comp()
-//
-// TODO: find()
-// TODO: count()
-// TODO: lower_bound()
-// TODO: upper_bound()
-// TODO: equal_range()
-//
-// TODO: get_allocator() // * done
-
-//
+// TODO: fix clear()
+// TODO: fix erase()
+// TODO: fix swap()

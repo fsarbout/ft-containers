@@ -4,6 +4,9 @@ int main()
 {
     ft::map< int, int, std::less<int>, std::allocator<ft::pair<const int, int> > > tree;
     ft::map< int, int, std::less<int>, std::allocator<ft::pair<const int, int> > > tree1;
+
+    std::map<int, int> std_tree;
+    ft::map<int, int> ft_tree;
     
     // iterator 
     ft::map< int, int, std::less<int>, std::allocator<ft::pair<const int, int> > >::iterator it, it1;
@@ -15,11 +18,16 @@ int main()
     tree1.insert(ft::pair<int, int>(145, 513));
     tree1.insert(ft::pair<int, int>(12, 513));
 
+    tree.insert(ft::pair<int, int>(34, 3415));
+    tree.insert(ft::pair<int, int>(1, 435));
+    tree.insert(ft::pair<int, int>(145, 513));
+    tree.insert(ft::pair<int, int>(12, 513));
+
     it = tree1.begin(); 
     it1 = tree1.end();
     
     // insert range
-    tree.insert(it, it1);
+    // tree.insert(it, it1);
 
     // tree.insert(tree1.begin(), tree1.end());
 

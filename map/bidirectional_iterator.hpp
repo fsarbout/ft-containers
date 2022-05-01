@@ -48,27 +48,7 @@ namespace ft
 
         bidirectional_iterator &operator++()
         {
-            if (_node)
-            {
-                if (_node->_right)
-                {
-                    _node = _node->_right;
-                    while (_node->_left)
-                        _node = _node->_left;
-                }
-                else
-                {
-                    while (_node->_parent && _node->_parent->_right == _node)
-                        _node = _node->_parent;
-                    _node = _node->_parent;
-                }
-            }
-            else
-            {
-                _node = _node->_right;
-                while (_node->_left)
-                    _node = _node->_left;
-            }
+            _node = increment(_node, *_root);
             return *this;
         }
 
@@ -81,27 +61,7 @@ namespace ft
 
         bidirectional_iterator &operator--()
         {
-            if (_node)
-            {
-                if (_node->_left)
-                {
-                    _node = _node->_left;
-                    while (_node->_right)
-                        _node = _node->_right;
-                }
-                else
-                {
-                    while (_node->_parent && _node->_parent->_left == _node)
-                        _node = _node->_parent;
-                    _node = _node->_parent;
-                }
-            }
-            else
-            {
-                _node = _node->_left;
-                while (_node->_right)
-                    _node = _node->_right;
-            }
+            _node = decrement(_node, *_root);
             return *this;
         }
 
@@ -157,7 +117,9 @@ namespace ft
 
         const_bidirectional_iterator(const bidirectional_iterator &other)
         {
-            *this = other;
+            _node = other._node;
+            _root = other._root;
+            // ? segv when doing *this = other
         }
 
         const_bidirectional_iterator(const const_bidirectional_iterator &other)
@@ -186,27 +148,8 @@ namespace ft
 
         const_bidirectional_iterator &operator++()
         {
-            if (_node)
-            {
-                if (_node->_right)
-                {
-                    _node = _node->_right;
-                    while (_node->_left)
-                        _node = _node->_left;
-                }
-                else
-                {
-                    while (_node->_parent && _node->_parent->_right == _node)
-                        _node = _node->_parent;
-                    _node = _node->_parent;
-                }
-            }
-            else
-            {
-                _node = _node->_right;
-                while (_node->_left)
-                    _node = _node->_left;
-            }
+            // use tree increment
+            _node = increment(_node, *_root);
             return *this;
         }
 
@@ -219,27 +162,7 @@ namespace ft
 
         const_bidirectional_iterator &operator--()
         {
-            if (_node)
-            {
-                if (_node->_left)
-                {
-                    _node = _node->_left;
-                    while (_node->_right)
-                        _node = _node->_right;
-                }
-                else
-                {
-                    while (_node->_parent && _node->_parent->_left == _node)
-                        _node = _node->_parent;
-                    _node = _node->_parent;
-                }
-            }
-            else
-            {
-                _node = _node->_left;
-                while (_node->_right)
-                    _node = _node->_right;
-            }
+            _node = decrement(_node, *_root);
             return *this;
         }
 

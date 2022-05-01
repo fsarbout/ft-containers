@@ -5,28 +5,24 @@
 #include "../utils/pair.hpp"
 #include "../utils/make_pair.hpp"
 #include "bidirectional_iterator.hpp"
-#include <cstddef>
+#include <cstddef> // linux
 
-#define GREEN "\e[1;32m"
 #define DEFAULT "\e[0;37m"
+#define GREEN "\e[1;32m"
 #define RED "\e[1;31m"
-
-// * we will need node
 
 namespace ft
 {
-    // * node class
-
     // node will be used as internal data for map and tree,
     // each node contains its data and a pointer to left node and a pointer to right node
-    template <typename T>
+    template <typename Pair>
     class Node
     {
     public:
-        T *_data;
-        Node<T> *_left;
-        Node<T> *_right;
-        Node<T> *_parent;
+        Pair *_data;
+        Node<Pair> *_left;
+        Node<Pair> *_right;
+        Node<Pair> *_parent;
         int _height;
         int _balance_factor;
         Node() {}
@@ -36,19 +32,90 @@ namespace ft
     template <class T>
     Node<T> *min_node(Node<T> *node)
     {
-        if (node == NULL)
+        if (!node)
             return (node);
-        while (node->_left != NULL)
+        while (node->_left)
             node = node->_left;
+        return (node);
+    }
+
+    template <class T>
+    Node<T> *max_node(Node<T> *node)
+    {
+        if (!node)
+            return (node);
+        while (node->_right)
+            node = node->_right;
+        return (node);
+    }
+
+    template <class T>
+    Node<T> *increment(Node<T> *node, Node<T> *root)
+    {
+        if (node == NULL)
+        {
+            node = root;
+
+            while (node->_left != NULL)
+                node = node->_left;
+        }
+        else
+        {
+            if (node->_right != NULL)
+            {
+                node = node->_right;
+                while (node->_left != NULL)
+                    node = node->_left;
+            }
+            else
+            {
+                Node<T> *temp = node->_parent;
+                while (temp != NULL && node == temp->_right)
+                {
+                    node = temp;
+                    temp = temp->_parent;
+                }
+                node = temp;
+            }
+        }
+        return (node);
+    }
+
+    template <class T>
+    Node<T> *decrement(Node<T> *node, Node<T> *root)
+    {
+        if (node == NULL)
+        {
+            node = max_node(root);
+        }
+        else
+        {
+            if (node->_left != NULL)
+            {
+                node = node->_left;
+                while (node->_right != NULL)
+                    node = node->_right;
+            }
+            else
+            {
+                Node<T> *temp = node->_parent;
+                while (temp != NULL && node == temp->_left)
+                {
+                    node = temp;
+                    temp = temp->_parent;
+                }
+                node = temp;
+            }
+        }
         return (node);
     }
 
     // * avl_tree class
 
-    template <class Key,                                                      // map::key_type
-              class Mapped_Type,                                              // map::mapped_type
-              class Compare = std::less<Key>,                                 // map::key_compare
-              class Alloc = std::allocator<ft::pair<const Key, Mapped_Type> > // map::allocator_type
+    template <class Key,                                                     // map::key_type
+              class Mapped_Type,                                             // map::mapped_type
+              class Compare = std::less<Key>,                                // map::key_compare
+              class Alloc = std::allocator<ft::pair<const Key, Mapped_Type>> // map::allocator_type
               >
     class avl_tree
     {
@@ -494,12 +561,8 @@ namespace ft
         // ! ****                            operation methods                              ****
         // ! ***********************************************************************************
         // ! ***********************************************************************************
-        
+
         // find
-
-
-
-
 
         //  lower bound
         node_type *lower_bound(node_type *node, key_type key)
@@ -519,8 +582,6 @@ namespace ft
                     return node;
             }
         }
-
-
     };
 
 } // namespace ft

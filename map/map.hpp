@@ -249,7 +249,8 @@ namespace ft
         // ! clear
         void clear()
         {
-            _tree.clear();
+            // _tree.clear();
+            this->erase(begin(), end());
         }
 
         // ! key compare

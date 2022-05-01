@@ -275,10 +275,9 @@ namespace ft
         // constructor with compare and allocator
         avl_tree(const Compare &comp, const allocator_type &alloc) : _root(NULL), _compare(comp), _pair_allocator(alloc), _node_allocator(alloc) {}
 
-
         avl_tree &operator=(const avl_tree &other)
         {
-            clear();
+            // clear();
             node_type *tmp = other._root;
             copy(tmp);
             return *this;
@@ -296,7 +295,7 @@ namespace ft
 
         ~avl_tree()
         {
-            clear();
+            // clear();
         }
 
         void clear()
@@ -436,22 +435,24 @@ namespace ft
 
         node_type *right_rotate(node_type *node)
         {
-            node_type *temp = node->_left;
-            node->_left = temp->_right;
-            if (temp->_right)
-                temp->_right->_parent = node;
-            temp->_parent = node->_parent;
+            node_type *tmp = node->_left;
+
+            node->_left = tmp->_right;
+
+            if (tmp->_right)
+                tmp->_right->_parent = node;
+            tmp->_parent = node->_parent;
             if (!node->_parent)
-                _root = temp;
+                _root = tmp;
             else if (node == node->_parent->_left)
-                node->_parent->_left = temp;
+                node->_parent->_left = tmp;
             else
-                node->_parent->_right = temp;
-            temp->_right = node;
-            node->_parent = temp;
+                node->_parent->_right = tmp;
+            tmp->_right = node;
+            node->_parent = tmp;
             update(node);
-            update(temp);
-            return temp;
+            update(tmp);
+            return tmp;
         }
 
         node_type *lr_rotate(node_type *node)

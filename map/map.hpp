@@ -88,11 +88,14 @@ namespace ft
         ~map() {}
 
         // ! assignation operator
-        map &operator=(const map &x)
+        map &operator=(const map &other)
         {
-            this->_tree = x._tree;
-            this->_allocator = x._allocator;
-            this->_compare = x._compare;
+            if (this != &other)
+            {
+                _tree = other._tree;
+                _compare = other._compare;
+                _allocator = other._allocator;
+            }
             return *this;
         }
 
@@ -226,31 +229,35 @@ namespace ft
 
         void erase(iterator first, iterator last)
         {
-            ft::vector<key_type> v_tmp;
+            ft::vector<key_type> tmp;
             while (first != last)
             {
-                v_tmp.push_back(first->first);
-                ++first;
+                tmp.push_back(first->first);
+                first++;
             }
-            for (typename ft::vector<key_type>::iterator it = v_tmp.begin(); it != v_tmp.end(); ++it)
+            typename ft::vector<key_type>::iterator it = tmp.begin();
+            while (it != tmp.end())
             {
                 erase(*it);
+                it++;
             }
         }
 
         // ! swap
-        void swap(map &x)
+        void swap(map &other)
         {
-            std::swap(this->_tree, x._tree);
-            std::swap(this->_compare, x._compare);
-            std::swap(this->_allocator, x._allocator);
+            // std::swap(_tree, other._tree); // ! time out
+            _tree.swap(other._tree);
+            std::swap(this->_compare, other._compare);
+            std::swap(this->_allocator, other._allocator);
         }
 
         // ! clear
         void clear()
         {
-            // _tree.clear();
+            // check
             this->erase(begin(), end());
+            // _tree.clear();
         }
 
         // ! key compare
@@ -345,14 +352,14 @@ namespace ft
         // ! equal range
         pair<const_iterator, const_iterator> equal_range(const key_type &k) const
         {
-            node_type *tmp = _tree.search(_tree._root, k);
-            return (pair<const_iterator, const_iterator>(const_iterator(tmp, const_cast<node_type **>(&_tree._root)), const_iterator(tmp, const_cast<node_type **>(&_tree._root))));
+            ft::pair<const_iterator, const_iterator> tmp = ft::make_pair(lower_bound(k), upper_bound(k));
+            return (tmp);
         }
 
         pair<iterator, iterator> equal_range(const key_type &k)
         {
-            node_type *tmp = _tree.search(_tree._root, k);
-            return (pair<iterator, iterator>(iterator(tmp, const_cast<node_type **>(&_tree._root)), iterator(tmp, const_cast<node_type **>(&_tree._root))));
+            ft::pair<iterator, iterator> tmp = ft::make_pair(lower_bound(k), upper_bound(k));
+            return (tmp);
         }
     };
 

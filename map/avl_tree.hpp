@@ -141,7 +141,7 @@ namespace ft
             return 1 + std::max(height(node->_left), height(node->_right));
         }
 
-        bool _equal(const key_type &key1, const key_type &key2) const
+        bool ___equal(const key_type &key1, const key_type &key2) const
         {
             return (_compare(key1, key2) == false && _compare(key2, key1) == false);
         }
@@ -153,7 +153,7 @@ namespace ft
                 return false;
 
             // value found
-            else if (_equal(node->_data->first, elem))
+            else if (___equal(node->_data->first, elem))
                 return true;
 
             // move to the left subtree because the value is smaller than the current node
@@ -198,53 +198,65 @@ namespace ft
             tmp->_balance_factor = 0;
             return tmp;
         }
-        node_type *remove(node_type *node, key_type key)
+
+
+     
+
+        // ! ***********************************************************************************
+        node_type *remove(node_type *node, key_type elem)
         {
-            if (!node)
-                return NULL;
-
-            if (_compare(key, node->_data->first))
-                node->_left = remove(node->_left, key);
-
-            else if (_compare(node->_data->first, key))
-                node->_right = remove(node->_right, key);
-
+            if (_compare(elem, node->_data->first))
+                node->_left = remove(node->_left, elem);
+            else if (_compare(node->_data->first, elem))
+                node->_right = remove(node->_right, elem);
             else
             {
-                if (!node->_left && !node->_right)
+                if (!node->_left && node->_right)
+                {
+                    node->_right->_parent = node->_parent;
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.construct(node->_data, *(node->_right->_data));
+                    _pair_allocator.destroy(node->_right->_data);
+                    _pair_allocator.deallocate(node->_right->_data, 1);
+                    _node_allocator.deallocate(node->_right, 1);
+                    node->_right = NULL;
+                }
+                else if (!node->_right && node->_left)
+                {
+                    node->_left->_parent = node->_parent;
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.construct(node->_data, *(node->_left->_data));
+                    _pair_allocator.destroy(node->_left->_data);
+                    _node_allocator.deallocate(node->_left, 1);
+                    node->_left = NULL;
+                }
+                else if (!node->_left && !node->_right)
                 {
                     _pair_allocator.destroy(node->_data);
                     _pair_allocator.deallocate(node->_data, 1);
                     _node_allocator.deallocate(node, 1);
+                    node = NULL;
                     return NULL;
                 }
-
-                else if (!node->_left)
-                {
-                    node_type *tmp = node->_right;
-                    std::swap(node->_data, tmp->_data);
-                    node->_right = remove(node->_right, key);
-                    return node;
-                }
-
-                else if (!node->_right)
-                {
-                    node_type *tmp = node->_left;
-                    std::swap(node->_data, tmp->_data);
-                    node->_left = remove(node->_left, key);
-                    return node;
-                }
-
                 else
                 {
-                    node_type *tmp = _min(node->_right);
-                    std::swap(node->_data, tmp->_data);
-                    node->_right = remove(node->_right, key);
+                    node_type *tmp = min_node(node->_right);
+                    _pair_allocator.destroy(node->_data);
+                    _pair_allocator.construct(node->_data, *(tmp->_data));
+                    node->_right = remove(node->_right, tmp->_data->first);
                 }
+                // else
+                // {
+                //     value_type successor = *_max(node->_left)->_data;
+                //     _pair_allocator.destroy(node->_data);
+                //     _pair_allocator.construct(node->_data, successor);
+                //     node->_left = remove(node->_left, successor.first);
+                // }
             }
             update(node);
-            return balance(node);
+            return (balance(node));
         }
+        // ! ***********************************************************************************
 
         void update(node_type *node)
         {
@@ -277,7 +289,9 @@ namespace ft
 
         avl_tree &operator=(const avl_tree &other)
         {
-            // clear();
+            clear();
+
+            // check 
             node_type *tmp = other._root;
             copy(tmp);
             return *this;
@@ -295,12 +309,14 @@ namespace ft
 
         ~avl_tree()
         {
-            // clear();
+            clear();
         }
 
         void clear()
         {
             freee(_root);
+            _root = NULL;
+            _size = 0;
         }
 
         void freee(node_type *node)
@@ -313,6 +329,7 @@ namespace ft
                 _pair_allocator.deallocate(node->_data, 1);
                 _node_allocator.deallocate(node, 1);
             }
+            node = NULL;
         }
 
         bool exists(key_type elem) const { return (__exists(_root, elem)); }
@@ -381,10 +398,16 @@ namespace ft
         {
             if (!exists(key))
                 return false;
-            // std::cout << "removing " << key << std::endl;
             _root = remove(_root, key);
             _size--;
             return true;
+        }
+
+           void swap(avl_tree &other)
+        {
+            std::swap(_size, other._size);
+            std::swap(_root, other._root);
+            std::swap(_compare, other._compare);
         }
 
         // ! ***********************************************************************************
@@ -395,7 +418,7 @@ namespace ft
 
         node_type *balance(node_type *node)
         {
-            if (node->_balance_factor == -2)
+            if (node->_balance_factor < -1)
             {
                 if (node->_left->_balance_factor <= 0)
                     return (right_rotate(node));
@@ -403,7 +426,7 @@ namespace ft
                     return (lr_rotate(node));
             }
             // right heavy
-            else if (node->_balance_factor == 2)
+            else if (node->_balance_factor > 1)
             {
                 if (node->_right->_balance_factor >= 0)
                     return (left_rotate(node));

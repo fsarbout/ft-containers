@@ -1,0 +1,7 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/fsarbout/Desktop/ft_containers-unit-test'
+ 
+make: *** No targets specified and no makefile found.  Stop.
+
+make: Leaving directory `/Users/fsarbout/Desktop/ft_containers-unit-test'
+ 

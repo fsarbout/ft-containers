@@ -102,15 +102,12 @@ namespace ft
         // ! it begin
         iterator begin()
         {
-            // std::cout << "begin called" << std::endl;
             node_type *tmp = min_node(_tree._root);
             return (iterator(tmp, const_cast<node_type **>(&_tree._root)));
         }
 
         const_iterator begin() const
         {
-            // node_type *tmp = _tree.min_node(_tree._root);
-            // return (const_iterator(tmp, const_cast<node_type **>(&_tree._root)));
             node_type *tmp = min_node(_tree._root);
             return (const_iterator(tmp, const_cast<node_type **>(&_tree._root)));
         }
@@ -118,7 +115,6 @@ namespace ft
         // ! it end
         iterator end()
         {
-            // std::cout << "end called" << std::endl;
             return iterator(NULL, const_cast<node_type **>(&_tree._root));
         }
 
@@ -132,14 +128,12 @@ namespace ft
         // ! rev it rend
         reverse_iterator rend()
         {
-            // std::cout << "rend called" << std::endl;
             reverse_iterator tmp(begin());
             return tmp;
         }
 
         const_reverse_iterator rend() const
         {
-            // std::cout << "const rend called" << std::endl;
             const_reverse_iterator tmp(begin());
             return tmp;
         }
@@ -255,9 +249,7 @@ namespace ft
         // ! clear
         void clear()
         {
-            // check
             this->erase(begin(), end());
-            // _tree.clear();
         }
 
         // ! key compare
@@ -304,18 +296,6 @@ namespace ft
             return this->_allocator;
         }
 
-        void print()
-        {
-            _tree.print_it(_tree);
-        }
-
-        // ! ***********************************************************************************
-        // ! ***********************************************************************************
-        // ! ****                            operation methods                              ****
-        // ! ***********************************************************************************
-        // ! ***********************************************************************************
-
-        // **** test behavior only
         iterator lower_bound(const key_type &k)
         {
 
@@ -407,7 +387,3 @@ namespace ft
     }
 
 }
-
-// TODO: fix clear()
-// TODO: fix erase()
-// TODO: fix swap()

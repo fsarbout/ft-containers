@@ -1,6 +1,5 @@
-#include "avl_tree.hpp"
-#include "bidirectional_iterator.hpp"
-#include "map.hpp"
+#include "../map/map.hpp"
+
 
 #include <map>
 
@@ -33,8 +32,8 @@ int main()
     pair4 = ft::make_pair(43, 5);
     pair5 = ft::make_pair(63, 51346);
     pair6 = ft::make_pair(71, 71);
-    pair7 = ft::make_pair(-2, 72);
-    pair8 = ft::make_pair(-3, 0);
+    pair7 = ft::make_pair(22222, 72);
+    pair8 = ft::make_pair(33333, 0);
     pair9 = ft::make_pair(0, 0);
     pair10 = ft::make_pair(1415, 1415);
     pair11 = ft::make_pair(7, 1);
@@ -42,7 +41,7 @@ int main()
     pair13 = ft::make_pair(11, 33);
     pair14 = ft::make_pair(42, 11);
     pair15 = ft::make_pair(13, 37);
-    pair16 = ft::make_pair(-1, 37);
+    pair16 = ft::make_pair(1111, 37);
 
 
     tree.insert(pair); 
@@ -67,12 +66,10 @@ int main()
     std::cout << "tree height: " << tree.height() << std::endl << std::endl;
     tree.print_it(tree);
 
-    // ! tmp tests   
 
     tree.remove(pair7  .first);
     std::cout << "tree height: " << tree.height() << std::endl << std::endl;
     tree.print_it(tree);
 
-    std::cout << map[13] << std::endl;
 
 }

@@ -25,13 +25,13 @@ namespace ft
         ~iterator() {}
         iterator(const iterator &copy)
         {
-            // * return (*this) will return the current class object
-            // * return (this ) will return the current class address
-            // * (&this) : "this" is a pointer, don't need it's address , we need the object it points to.
-            // * return (*this) without reference will return, will just clone the current object(allocated on stack)
-            // * so changes mades on it will not affect the original object
-            // std::cout << "this: " << this << "copy " << &copy << std::endl;
             *this = copy;
+        }
+
+        // base
+        pointer base() const
+        {
+            return _ptr;
         }
 
         iterator &operator=(const iterator &obj)
@@ -64,35 +64,41 @@ namespace ft
             _ptr--;
             return tmp;
         }
-        bool operator==(const iterator &obj) const
+        template <class U>
+        bool operator==(const iterator<U> &obj) const
         {
-            return (this->_ptr == obj._ptr);
+            return (this->_ptr == obj.base());
         }
-        bool operator!=(const iterator &obj) const
+        template <class U>
+        bool operator!=(const iterator<U> &obj) const
         {
-            return (this->_ptr != obj._ptr);
+            return (this->_ptr != obj.base());
         }
-        bool operator<=(const iterator &obj) const
+        template <class U>
+        bool operator<=(const iterator<U> &obj) const
         {
-            return (this->_ptr <= obj._ptr);
+            return (this->_ptr <= obj.base());
         }
-        bool operator<(const iterator &obj) const
+        template <class U>
+        bool operator<(const iterator<U> &obj) const
         {
-            return (this->_ptr < obj._ptr);
+            return (this->_ptr < obj.base());
         }
-        bool operator>(const iterator &obj) const
+        template <class U>
+        bool operator>(const iterator<U> &obj) const
         {
-            return (this->_ptr > obj._ptr);
+            return (this->_ptr > obj.base());
         }
-        bool operator>=(const iterator &obj) const
+        template <class U>
+        bool operator>=(const iterator<U> &obj) const
         {
-            return (this->_ptr >= obj._ptr);
+            return (this->_ptr >= obj.base());
         }
         // operator - returns distance between two iterators
         difference_type operator-(const iterator &obj) const
         {
             // * Subtraction gives you the distance >> the number of steps from one point to the other
-            return (this->_ptr - obj._ptr);
+            return (this->_ptr - obj.base());
         }
    
         reference operator*()

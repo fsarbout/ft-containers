@@ -4,9 +4,11 @@ CC = c++
 
 CFLAGS = -Wall -Wextra -Werror -std=gnu++0x -std=c++98 -g #-fsanitize=address
 
-# SRC = tests/map/upper-lower_bound.cpp\
+# SRC = tests/_map.cpp\
 
-SRC = map/map_test2.cpp\
+SRC = tests/_stack.cpp\
+
+# SRC = tests/_vector.cpp\
 	
 all : $(NAME)
 

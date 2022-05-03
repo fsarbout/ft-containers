@@ -165,7 +165,6 @@ namespace ft
                 return __exists(node->_right, elem);
         }
 
-        // ! end of private methods
         node_type *add(node_type *node, value_type value)
         {
             if (node == NULL)
@@ -199,10 +198,6 @@ namespace ft
             return tmp;
         }
 
-
-     
-
-        // ! ***********************************************************************************
         node_type *remove(node_type *node, key_type elem)
         {
             if (_compare(elem, node->_data->first))
@@ -245,18 +240,10 @@ namespace ft
                     _pair_allocator.construct(node->_data, *(tmp->_data));
                     node->_right = remove(node->_right, tmp->_data->first);
                 }
-                // else
-                // {
-                //     value_type successor = *_max(node->_left)->_data;
-                //     _pair_allocator.destroy(node->_data);
-                //     _pair_allocator.construct(node->_data, successor);
-                //     node->_left = remove(node->_left, successor.first);
-                // }
             }
             update(node);
             return (balance(node));
         }
-        // ! ***********************************************************************************
 
         void update(node_type *node)
         {
@@ -276,7 +263,6 @@ namespace ft
         // ! ***********************************************************************************
 
     public:
-        // constructor
         avl_tree() : _root(NULL), _size(0), _compare(), _pair_allocator(), _node_allocator() {}
 
         avl_tree(const avl_tree &other) : _root(NULL), _size(other._size)
@@ -284,14 +270,11 @@ namespace ft
             *this = other;
         }
 
-        // constructor with compare and allocator
         avl_tree(const Compare &comp, const allocator_type &alloc) : _root(NULL), _compare(comp), _pair_allocator(alloc), _node_allocator(alloc) {}
 
         avl_tree &operator=(const avl_tree &other)
         {
             clear();
-
-            // check 
             node_type *tmp = other._root;
             copy(tmp);
             return *this;
@@ -425,7 +408,6 @@ namespace ft
                 else
                     return (lr_rotate(node));
             }
-            // right heavy
             else if (node->_balance_factor > 1)
             {
                 if (node->_right->_balance_factor >= 0)
@@ -509,27 +491,22 @@ namespace ft
                 else
                     return search(node->_right, key);
             }
-            //
-            // return node;
         }
-
-        // test search
 
         // ! ********************* temp test *********************
-        node_type *looking(key_type key)
-        {
-            node_type *tmp = search(_root, key);
-            if (tmp)
-            {
-                std::cout << "found" << std::endl;
-                std::cout << tmp->_data->second << std::endl;
-            }
-            else
-                std::cout << "not found" << std::endl;
-            return tmp;
-        }
+        // node_type *looking(key_type key)
+        // {
+        //     node_type *tmp = search(_root, key);
+        //     if (tmp)
+        //     {
+        //         std::cout << "found" << std::endl;
+        //         std::cout << tmp->_data->second << std::endl;
+        //     }
+        //     else
+        //         std::cout << "not found" << std::endl;
+        //     return tmp;
+        // }
 
-        // !
         bool empty() const
         {
             return (_size == 0);
@@ -553,8 +530,6 @@ namespace ft
             if (node->_right)
                 return _min(node->_right);
             node_type *tmp = node->_parent;
-            // for (; tmp && node == tmp->_right; node = tmp, tmp = tmp->_parent)
-            //     ;
             while (tmp && node == tmp->_right)
             {
                 node = tmp;
